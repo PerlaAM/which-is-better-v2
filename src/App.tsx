@@ -2,15 +2,17 @@ import { useState } from 'react';
 import { useFormik } from 'formik';
 import { storesOptions } from './data/stores';
 import { IProduct } from './interfaces/product-interfaces';
+import ProductDetails from './components/ProductDetails';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Select from 'react-select';
 import Button from 'react-bootstrap/Button';
+import Select from 'react-select';
 
 type Errors = {
   productName?: string;
   productUrl?: string;
+  price?: string;
   quantity?: string;
   unitMeasure?: string;
 };
@@ -19,8 +21,10 @@ const validate = (values: any) => {
   const errors: Errors = {};
   if (!values.productName) errors.productName = 'Required';
   if (!values.productUrl) errors.productUrl = 'Required';
+  if (!values.price) errors.price = 'Required';
   if (!values.quantity) errors.quantity = 'Required';
   if (!values.unitMeasure) errors.unitMeasure = 'Required';
+
   return errors;
 };
 
@@ -32,29 +36,52 @@ function App() {
       productName: '',
       storeName: storesOptions[0].value,
       productUrl: '',
+      price: 0.0,
       quantity: 0,
       unitMeasure: '',
     },
     validate,
     onSubmit: (values, { resetForm }) => {
       resetForm();
-
-      let newProduct = {
-        productName: values.productName,
-        storeName: values.storeName,
-        productUrl: values.productUrl,
-        quantity: values.quantity,
-        unitMeasure: values.unitMeasure,
-      };
-
-      setProductsList([newProduct, ...productsList]);
+      addProductsList(values);
     },
   });
+
+  const addProductsList = (values: any) => {
+    let newProduct = {
+      productName: values?.productName,
+      storeName: values?.storeName,
+      productUrl: values?.productUrl,
+      price: values?.price,
+      quantity: values?.quantity,
+      unitMeasure: values?.unitMeasure,
+      priceUnitMeasure: getPrice(
+        values?.unitMeasure,
+        values?.quantity,
+        values?.price
+      ),
+    };
+
+    setProductsList([newProduct, ...productsList]);
+  };
+
+  const getPrice = (
+    unitMeasure: string,
+    quantity: number,
+    price: number
+  ): number => {
+    if (unitMeasure === 'kg' || unitMeasure === 'l') {
+      let quantityLittle = quantity * 1000;
+      return price / quantityLittle;
+    } else {
+      return price / quantity;
+    }
+  };
 
   return (
     <Container className='vh-100 py-5'>
       <Row>
-        <Col md={{ span: 3 }}>
+        <Col md={{ span: 4 }}>
           <h1>New product</h1>
           <form onSubmit={formik.handleSubmit}>
             <div className='w-100 d-flex flex-column mb-3'>
@@ -95,6 +122,17 @@ function App() {
               {formik.errors.productUrl ? (
                 <div>{formik.errors.productUrl}</div>
               ) : null}
+            </div>
+            <div className='w-100 d-flex flex-column mb-3'>
+              <label htmlFor='price'>Price</label>
+              <input
+                id='price'
+                name='price'
+                type='number'
+                onChange={formik.handleChange}
+                value={formik.values.price}
+              />
+              {formik.errors.price ? <div>{formik.errors.price}</div> : null}
             </div>
             <div className='w-100 d-flex flex-column mb-3'>
               <label htmlFor='quantity'>Weight or units</label>
@@ -164,7 +202,9 @@ function App() {
                   checked={formik.values.unitMeasure === 'pieces'}
                   onChange={() => formik.setFieldValue('unitMeasure', 'pieces')}
                 />
-                <label htmlFor='pieces'>Pieces</label>
+                <label htmlFor='pieces' className='me-2'>
+                  Pieces
+                </label>
               </div>
               {formik.errors.unitMeasure ? (
                 <div>{formik.errors.unitMeasure}</div>
@@ -177,10 +217,16 @@ function App() {
           </form>
         </Col>
 
-        <Col md={{ span: 3 }}>
-          {productsList.map((product: any, index: number) => (
-            <p key={index}>{product?.productName} </p>
-          ))}
+        <Col md={{ span: 4 }}>
+          {productsList
+            .sort((firstElement, secondElement) =>
+              firstElement.priceUnitMeasure > secondElement.priceUnitMeasure
+                ? 1
+                : -1
+            )
+            .map((product, index) => (
+              <ProductDetails product={product} key={index} />
+            ))}
         </Col>
       </Row>
     </Container>
