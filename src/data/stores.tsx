@@ -1,9 +1,6 @@
-export interface StoreOption {
-  readonly value: string;
-  readonly label: string;
-}
+import { IStoreOption } from '../interfaces/store-interfaces';
 
-export const storesOptions: readonly StoreOption[] = [
+export const storesOptions: readonly IStoreOption[] = [
   { value: 'sams', label: "Sam's Club" },
   { value: 'walmart', label: 'Walmart' },
   { value: 'amazon', label: 'Amazon' },

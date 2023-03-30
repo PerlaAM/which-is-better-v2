@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { useFormik } from 'formik';
 import { storesOptions } from './data/stores';
+import { IProduct } from './interfaces/product-interfaces';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -23,16 +25,30 @@ const validate = (values: any) => {
 };
 
 function App() {
+  const [productsList, setProductsList] = useState<IProduct[]>([]);
+
   const formik = useFormik({
     initialValues: {
       productName: '',
       storeName: storesOptions[0].value,
       productUrl: '',
+      quantity: 0,
       unitMeasure: '',
-      quantity: '',
     },
     validate,
-    onSubmit: (values) => {},
+    onSubmit: (values, { resetForm }) => {
+      resetForm();
+
+      let newProduct = {
+        productName: values.productName,
+        storeName: values.storeName,
+        productUrl: values.productUrl,
+        quantity: values.quantity,
+        unitMeasure: values.unitMeasure,
+      };
+
+      setProductsList([newProduct, ...productsList]);
+    },
   });
 
   return (
@@ -159,6 +175,12 @@ function App() {
               Dark
             </Button>
           </form>
+        </Col>
+
+        <Col md={{ span: 3 }}>
+          {productsList.map((product: any, index: number) => (
+            <p key={index}>{product?.productName} </p>
+          ))}
         </Col>
       </Row>
     </Container>
