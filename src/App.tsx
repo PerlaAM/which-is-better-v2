@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useFormik } from 'formik';
 import { storesOptions } from './data/stores';
 import { IProduct } from './interfaces/product-interfaces';
@@ -29,6 +29,7 @@ const validate = (values: any) => {
 };
 
 function App() {
+  const selectInputRef: any = useRef(null);
   const [productsList, setProductsList] = useState<IProduct[]>([]);
 
   const formik = useFormik({
@@ -43,6 +44,8 @@ function App() {
     validate,
     onSubmit: (values, { resetForm }) => {
       resetForm();
+      selectInputRef.current.selectOption(storesOptions[0]);
+
       addProductsList(values);
     },
   });
@@ -55,6 +58,7 @@ function App() {
       price: values?.price,
       quantity: values?.quantity,
       unitMeasure: values?.unitMeasure,
+      quantityConverted: getQuantity(values?.unitMeasure, values?.quantity),
       priceUnitMeasure: getPrice(
         values?.unitMeasure,
         values?.quantity,
@@ -63,6 +67,14 @@ function App() {
     };
 
     setProductsList([newProduct, ...productsList]);
+  };
+
+  const getQuantity = (unitMeasure: string, quantity: number): number => {
+    if (unitMeasure === 'kg' || unitMeasure === 'l') {
+      return quantity * 1000;
+    } else {
+      return quantity;
+    }
   };
 
   const getPrice = (
@@ -80,7 +92,7 @@ function App() {
 
   return (
     <Container className='vh-100 py-5'>
-      <Row>
+      <Row className='h-100'>
         <Col md={{ span: 4 }}>
           <h1>New product</h1>
           <form onSubmit={formik.handleSubmit}>
@@ -100,6 +112,7 @@ function App() {
             <div className='w-100 d-flex flex-column mb-3'>
               <label htmlFor='storeName'>Store</label>
               <Select
+                ref={selectInputRef}
                 className='basic-single'
                 classNamePrefix='select'
                 defaultValue={storesOptions[0]}
@@ -217,16 +230,19 @@ function App() {
           </form>
         </Col>
 
-        <Col md={{ span: 4 }}>
-          {productsList
-            .sort((firstElement, secondElement) =>
-              firstElement.priceUnitMeasure > secondElement.priceUnitMeasure
-                ? 1
-                : -1
-            )
-            .map((product, index) => (
-              <ProductDetails product={product} key={index} />
-            ))}
+        <Col md={{ span: 4 }} className='h-100'>
+          <h1>Products</h1>
+          <div className='overflow-scroll h-calc'>
+            {productsList
+              .sort((firstElement, secondElement) =>
+                firstElement.priceUnitMeasure > secondElement.priceUnitMeasure
+                  ? 1
+                  : -1
+              )
+              .map((product, index) => (
+                <ProductDetails product={product} key={index} />
+              ))}
+          </div>
         </Col>
       </Row>
     </Container>

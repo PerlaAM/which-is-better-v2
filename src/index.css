@@ -27,3 +27,7 @@ body {
 .radio-box input[type='radio']:checked + label {
   border: solid 2px green;
 }
+
+.h-calc {
+  height: calc(100% - 3.2rem);
+}

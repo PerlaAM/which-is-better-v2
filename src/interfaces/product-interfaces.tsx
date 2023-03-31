@@ -6,4 +6,5 @@ export interface IProduct {
   quantity: number;
   unitMeasure: string;
   priceUnitMeasure: number;
+  quantityConverted: number;
 }
