@@ -1,8 +1,10 @@
 import { useState, useRef } from 'react';
 import { useFormik } from 'formik';
 import { storesOptions } from './data/stores';
-import { IProduct } from './interfaces/product-interfaces';
+import { unitMeasureOptions } from './data/unitMeasures';
+import { IProduct } from './interfaces/productInterfaces';
 import ProductDetails from './components/ProductDetails';
+import ErrorValidation from './components/ErrorValidation';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -30,6 +32,7 @@ const validate = (values: any) => {
 
 function App() {
   const selectInputRef: any = useRef(null);
+  const unitMeasureRef: any = useRef(null);
   const [productsList, setProductsList] = useState<IProduct[]>([]);
 
   const formik = useFormik({
@@ -105,9 +108,7 @@ function App() {
                 onChange={formik.handleChange}
                 value={formik.values.productName}
               />
-              {formik.errors.productName ? (
-                <div>{formik.errors.productName}</div>
-              ) : null}
+              <ErrorValidation message={formik.errors.productName} />
             </div>
             <div className='w-100 d-flex flex-column mb-3'>
               <label htmlFor='storeName'>Store</label>
@@ -132,9 +133,7 @@ function App() {
                 onChange={formik.handleChange}
                 value={formik.values.productUrl}
               />
-              {formik.errors.productUrl ? (
-                <div>{formik.errors.productUrl}</div>
-              ) : null}
+              <ErrorValidation message={formik.errors.productUrl} />
             </div>
             <div className='w-100 d-flex flex-column mb-3'>
               <label htmlFor='price'>Price</label>
@@ -145,7 +144,7 @@ function App() {
                 onChange={formik.handleChange}
                 value={formik.values.price}
               />
-              {formik.errors.price ? <div>{formik.errors.price}</div> : null}
+              <ErrorValidation message={formik.errors.price} />
             </div>
             <div className='w-100 d-flex flex-column mb-3'>
               <label htmlFor='quantity'>Weight or units</label>
@@ -156,76 +155,28 @@ function App() {
                 onChange={formik.handleChange}
                 value={formik.values.quantity}
               />
-              {formik.errors.quantity ? (
-                <div>{formik.errors.quantity}</div>
-              ) : null}
+              <ErrorValidation message={formik.errors.quantity} />
             </div>
             <div>
-              <label className='w-100'>Unit of measure</label>
-              <div className='radio-box'>
-                <input
-                  id='milliliters'
-                  type='radio'
-                  name='milliliters'
-                  value='ml'
-                  checked={formik.values.unitMeasure === 'ml'}
-                  onChange={() => formik.setFieldValue('unitMeasure', 'ml')}
-                />
-                <label htmlFor='milliliters' className='me-2'>
-                  ml
-                </label>
-                <input
-                  id='liters'
-                  type='radio'
-                  name='liters'
-                  value='l'
-                  checked={formik.values.unitMeasure === 'l'}
-                  onChange={() => formik.setFieldValue('unitMeasure', 'l')}
-                />
-                <label htmlFor='liters' className='me-2'>
-                  L
-                </label>
-                <input
-                  id='grams'
-                  type='radio'
-                  name='grams'
-                  value='g'
-                  checked={formik.values.unitMeasure === 'g'}
-                  onChange={() => formik.setFieldValue('unitMeasure', 'g')}
-                />
-                <label htmlFor='grams' className='me-2'>
-                  g
-                </label>
-                <input
-                  id='kilograms'
-                  type='radio'
-                  name='kilograms'
-                  value='kg'
-                  checked={formik.values.unitMeasure === 'kg'}
-                  onChange={() => formik.setFieldValue('unitMeasure', 'kg')}
-                />
-                <label htmlFor='kilograms' className='me-2'>
-                  kg
-                </label>
-                <input
-                  id='pieces'
-                  type='radio'
-                  name='pieces'
-                  value='pieces'
-                  checked={formik.values.unitMeasure === 'pieces'}
-                  onChange={() => formik.setFieldValue('unitMeasure', 'pieces')}
-                />
-                <label htmlFor='pieces' className='me-2'>
-                  Pieces
-                </label>
-              </div>
-              {formik.errors.unitMeasure ? (
-                <div>{formik.errors.unitMeasure}</div>
-              ) : null}
+              <label htmlFor='unitMeasure'>Unit of measure</label>
+              <Select
+                ref={unitMeasureRef}
+                className='basic-single'
+                classNamePrefix='select'
+                defaultValue={unitMeasureOptions[0]}
+                name='unitMeasure'
+                options={unitMeasureOptions}
+                onChange={(selectedUnitMeasure) =>
+                  formik.setFieldValue(
+                    'unitMeasure',
+                    selectedUnitMeasure?.value
+                  )
+                }
+              />
             </div>
 
             <Button variant='outline-dark' type='submit'>
-              Dark
+              Add product
             </Button>
           </form>
         </Col>

@@ -1,4 +1,4 @@
-import { IStoreOption } from '../interfaces/store-interfaces';
+import { IStoreOption } from '../interfaces/storeInterfaces';
 
 export const storesOptions: readonly IStoreOption[] = [
   { value: 'sams', label: "Sam's Club" },

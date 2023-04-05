@@ -10,24 +10,6 @@ body {
   color: #444444;
 }
 
-.radio-box label {
-  display: inline-block;
-  width: 70px;
-  padding: 0.5rem 0rem;
-  border: solid 2px #ccc;
-  transition: all 0.3s;
-  font-size: 0.7rem;
-  text-align: center;
-}
-
-.radio-box input[type='radio'] {
-  display: none;
-}
-
-.radio-box input[type='radio']:checked + label {
-  border: solid 2px green;
-}
-
 .h-calc {
   height: calc(100% - 3.2rem);
 }

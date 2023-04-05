@@ -1,5 +1,5 @@
 import { formatValue } from '../components/utils/formatValue';
-import { Stores } from '../enum/stores-enum';
+import { Stores } from '../enum/storesEnum';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 
