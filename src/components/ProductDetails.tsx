@@ -1,49 +1,53 @@
-import { formatValue } from '../components/utils/formatValue';
+import { formatter } from '../components/utils/formatValue';
 import { Stores } from '../enum/storesEnum';
-import Card from 'react-bootstrap/Card';
-import ListGroup from 'react-bootstrap/ListGroup';
 
 export default function ProductDetails({ product }: any) {
   const getUnitMeasure = (): string => {
     const unitMeasure = product?.unitMeasure;
-    let unitMeasureText = '';
+    let unitMeasureText = product?.unitMeasure;
 
     if (unitMeasure === 'kg') {
-      return 'g';
+      unitMeasureText = 'g';
     } else if (unitMeasure === 'l') {
-      return 'ml';
+      unitMeasureText = 'ml';
     } else if (unitMeasure === 'pieces') {
-      return 'pieces';
+      unitMeasureText = 'pieces';
     }
 
     return unitMeasureText;
   };
 
   return (
-    <Card className='mb-3'>
-      <Card.Body>
-        <Card.Title>{product?.productName}</Card.Title>
-        <Card.Subtitle className='mb-2 text-muted'>
-          {Stores[product.storeName]}
-        </Card.Subtitle>
-      </Card.Body>
-
-      <ListGroup className='list-group-flush'>
-        <ListGroup.Item>{formatValue(product?.price)}</ListGroup.Item>
-        <ListGroup.Item>
-          {product?.quantityConverted} {getUnitMeasure()}
-        </ListGroup.Item>
-        <ListGroup.Item>
-          <p className='fw-bolder m-0'>
-            Unit price: <span>{formatValue(product?.priceUnitMeasure)}</span>
+    <div className='p-3 bg-light-gray rounded'>
+      <div className='text-center mb-3'>
+        <p className='m-0 fw-light'>{product?.productName}</p>
+        <p className='m-0 text-steal'>
+          {Stores[product?.storeName]}
+          {product?.productUrl && (
+            <a href={product?.productUrl} target='_blank' rel='noreferrer'>
+              <i className='ms-2 fa-solid fa-arrow-up-right-from-square'></i>
+            </a>
+          )}
+        </p>
+      </div>
+      <div className='d-flex justify-content-between'>
+        <div className='text-center'>
+          <p className='m-0 fw-bold'>{formatter.format(product?.price)}</p>
+          <p className='m-0 fs-8'>PRICE</p>
+        </div>
+        <div className='text-center'>
+          <p className='m-0 fw-bold'>
+            {product?.quantityConverted} {getUnitMeasure()}
           </p>
-        </ListGroup.Item>
-      </ListGroup>
-      <Card.Body>
-        <Card.Link target='_blank' href={product?.productUrl}>
-          Link
-        </Card.Link>
-      </Card.Body>
-    </Card>
+          <p className='m-0 fs-8'>WEIGHT</p>
+        </div>
+        <div className='text-center'>
+          <p className='m-0 fw-bold'>
+            {formatter.format(product?.priceUnitMeasure)}
+          </p>
+          <p className='m-0 fs-8'>UNIT PRICE</p>
+        </div>
+      </div>
+    </div>
   );
 }

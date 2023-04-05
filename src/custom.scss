@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+$body-bg: #f8f9fa;
+$body-color: #444444;
+$font-family-sans-serif: 'Poppins', sans-serif;
+$font-family-base: $font-family-sans-serif !default;
+$font-weight-bold: 500;
+$primary: #4c5cea;
+$secondary: #4ceada;
+$light-gray: #edede9;
+$steal: #6c757d;
+
+$h8-font-size: 0.8rem;
+
+$font-sizes: (
+  8: $h8-font-size,
+);
+
+$theme-colors: (
+  'primary': $primary,
+  'secondary': $secondary,
+  'light-gray': $light-gray,
+  'steal': $steal,
+);
+@import '~bootstrap/scss/bootstrap';

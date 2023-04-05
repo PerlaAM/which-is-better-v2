@@ -13,25 +13,21 @@ import Select from 'react-select';
 
 type Errors = {
   productName?: string;
-  productUrl?: string;
   price?: string;
   quantity?: string;
-  unitMeasure?: string;
 };
 
 const validate = (values: any) => {
   const errors: Errors = {};
   if (!values.productName) errors.productName = 'Required';
-  if (!values.productUrl) errors.productUrl = 'Required';
   if (!values.price) errors.price = 'Required';
   if (!values.quantity) errors.quantity = 'Required';
-  if (!values.unitMeasure) errors.unitMeasure = 'Required';
 
   return errors;
 };
 
 function App() {
-  const selectInputRef: any = useRef(null);
+  const storesRef: any = useRef(null);
   const unitMeasureRef: any = useRef(null);
   const [productsList, setProductsList] = useState<IProduct[]>([]);
 
@@ -42,12 +38,12 @@ function App() {
       productUrl: '',
       price: 0.0,
       quantity: 0,
-      unitMeasure: '',
+      unitMeasure: unitMeasureOptions[0].value,
     },
     validate,
     onSubmit: (values, { resetForm }) => {
       resetForm();
-      selectInputRef.current.selectOption(storesOptions[0]);
+      storesRef.current.selectOption(storesOptions[0]);
 
       addProductsList(values);
     },
@@ -113,7 +109,7 @@ function App() {
             <div className='w-100 d-flex flex-column mb-3'>
               <label htmlFor='storeName'>Store</label>
               <Select
-                ref={selectInputRef}
+                ref={storesRef}
                 className='basic-single'
                 classNamePrefix='select'
                 defaultValue={storesOptions[0]}
@@ -133,7 +129,6 @@ function App() {
                 onChange={formik.handleChange}
                 value={formik.values.productUrl}
               />
-              <ErrorValidation message={formik.errors.productUrl} />
             </div>
             <div className='w-100 d-flex flex-column mb-3'>
               <label htmlFor='price'>Price</label>
@@ -175,7 +170,7 @@ function App() {
               />
             </div>
 
-            <Button variant='outline-dark' type='submit'>
+            <Button variant='outline-primary' type='submit'>
               Add product
             </Button>
           </form>
