@@ -18,7 +18,7 @@ export default function ProductDetails({ product }: any) {
   };
 
   return (
-    <div className='p-3 bg-light-gray rounded'>
+    <div className='p-3 bg-light-gray rounded mb-3 shadow-sm'>
       <div className='text-center mb-3'>
         <p className='m-0 fw-light'>{product?.productName}</p>
         <p className='m-0 text-steal'>
@@ -31,17 +31,17 @@ export default function ProductDetails({ product }: any) {
         </p>
       </div>
       <div className='d-flex justify-content-between'>
-        <div className='text-center'>
-          <p className='m-0 fw-bold'>{formatter.format(product?.price)}</p>
+        <div className='text-center h-100 lh-sm'>
+          <p className='m-0 fw-semibold'>{formatter.format(product?.price)}</p>
           <p className='m-0 fs-8'>PRICE</p>
         </div>
-        <div className='text-center'>
-          <p className='m-0 fw-bold'>
+        <div className='text-center h-100 lh-sm'>
+          <p className='m-0 fw-semibold'>
             {product?.quantityConverted} {getUnitMeasure()}
           </p>
           <p className='m-0 fs-8'>WEIGHT</p>
         </div>
-        <div className='text-center'>
+        <div className='text-center h-100 lh-sm'>
           <p className='m-0 fw-bold'>
             {formatter.format(product?.priceUnitMeasure)}
           </p>

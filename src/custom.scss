@@ -4,7 +4,8 @@ $body-bg: #f8f9fa;
 $body-color: #444444;
 $font-family-sans-serif: 'Poppins', sans-serif;
 $font-family-base: $font-family-sans-serif !default;
-$font-weight-bold: 500;
+$font-weight-semibold: 500;
+$font-weight-bold: 600;
 $primary: #4c5cea;
 $secondary: #4ceada;
 $light-gray: #edede9;
@@ -22,4 +23,5 @@ $theme-colors: (
   'light-gray': $light-gray,
   'steal': $steal,
 );
+
 @import '~bootstrap/scss/bootstrap';

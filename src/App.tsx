@@ -1,8 +1,9 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useFormik } from 'formik';
 import { storesOptions } from './data/stores';
 import { unitMeasureOptions } from './data/unitMeasures';
 import { IProduct } from './interfaces/productInterfaces';
+import { UnitMeasures } from './enum/unitMeasuresEnum';
 import ProductDetails from './components/ProductDetails';
 import ErrorValidation from './components/ErrorValidation';
 import Container from 'react-bootstrap/Container';
@@ -19,6 +20,7 @@ type Errors = {
 
 const validate = (values: any) => {
   const errors: Errors = {};
+
   if (!values.productName) errors.productName = 'Required';
   if (!values.price) errors.price = 'Required';
   if (!values.quantity) errors.quantity = 'Required';
@@ -30,28 +32,34 @@ function App() {
   const storesRef: any = useRef(null);
   const unitMeasureRef: any = useRef(null);
   const [productsList, setProductsList] = useState<IProduct[]>([]);
+  const [lastProduct, setLastProduct] = useState('');
+  const [lastUnitMeasure, setLastUnitMeasure] = useState(0);
+
+  useEffect(() => {
+    formik.setFieldValue('productName', lastProduct);
+  }, [lastProduct]);
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      productName: '',
+      productName: lastProduct,
       storeName: storesOptions[0].value,
       productUrl: '',
       price: 0.0,
       quantity: 0,
-      unitMeasure: unitMeasureOptions[0].value,
+      unitMeasure: UnitMeasures[lastUnitMeasure],
     },
     validate,
     onSubmit: (values, { resetForm }) => {
-      resetForm();
-      storesRef.current.selectOption(storesOptions[0]);
-
+      saveLastProduct(values);
       addProductsList(values);
+      resetForm();
     },
   });
 
   const addProductsList = (values: any) => {
     let newProduct = {
-      productName: values?.productName,
+      productName: values?.productName || lastProduct,
       storeName: values?.storeName,
       productUrl: values?.productUrl,
       price: values?.price,
@@ -89,6 +97,13 @@ function App() {
     }
   };
 
+  const saveLastProduct = (values: any) => {
+    if (lastUnitMeasure) values.unitMeasure = lastUnitMeasure;
+
+    setLastProduct(values.productName);
+    setLastUnitMeasure(values.unitMeasure);
+  };
+
   return (
     <Container className='vh-100 py-5'>
       <Row className='h-100'>
@@ -97,14 +112,17 @@ function App() {
           <form onSubmit={formik.handleSubmit}>
             <div className='w-100 d-flex flex-column mb-3'>
               <label htmlFor='productName'>Product name</label>
-              <input
-                id='productName'
-                name='productName'
-                type='text'
-                onChange={formik.handleChange}
-                value={formik.values.productName}
-              />
-              <ErrorValidation message={formik.errors.productName} />
+
+              <div className='w-100 d-flex flex-column'>
+                <input
+                  id='productName'
+                  name='productName'
+                  type='text'
+                  onChange={formik.handleChange}
+                  value={formik.values.productName}
+                />
+                <ErrorValidation message={formik.errors.productName} />
+              </div>
             </div>
             <div className='w-100 d-flex flex-column mb-3'>
               <label htmlFor='storeName'>Store</label>
