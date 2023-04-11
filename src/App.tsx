@@ -1,78 +1,133 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useFormik } from 'formik';
 import { storesOptions } from './data/stores';
-import { IProduct } from './interfaces/product-interfaces';
+import { unitMeasureOptions } from './data/unitMeasures';
+import { IProduct } from './interfaces/productInterfaces';
+import { UnitMeasures } from './enum/unitMeasuresEnum';
+import ProductDetails from './components/ProductDetails';
+import ErrorValidation from './components/ErrorValidation';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Select from 'react-select';
 import Button from 'react-bootstrap/Button';
+import Select from 'react-select';
 
 type Errors = {
   productName?: string;
-  productUrl?: string;
+  price?: string;
   quantity?: string;
-  unitMeasure?: string;
 };
 
 const validate = (values: any) => {
   const errors: Errors = {};
+
   if (!values.productName) errors.productName = 'Required';
-  if (!values.productUrl) errors.productUrl = 'Required';
+  if (!values.price) errors.price = 'Required';
   if (!values.quantity) errors.quantity = 'Required';
-  if (!values.unitMeasure) errors.unitMeasure = 'Required';
+
   return errors;
 };
 
 function App() {
+  const storesRef: any = useRef(null);
+  const unitMeasureRef: any = useRef(null);
   const [productsList, setProductsList] = useState<IProduct[]>([]);
+  const [lastProduct, setLastProduct] = useState('');
+  const [lastUnitMeasure, setLastUnitMeasure] = useState(0);
+
+  useEffect(() => {
+    formik.setFieldValue('productName', lastProduct);
+  }, [lastProduct]);
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      productName: '',
+      productName: lastProduct,
       storeName: storesOptions[0].value,
       productUrl: '',
+      price: 0.0,
       quantity: 0,
-      unitMeasure: '',
+      unitMeasure: UnitMeasures[lastUnitMeasure],
     },
     validate,
     onSubmit: (values, { resetForm }) => {
+      saveLastProduct(values);
+      addProductsList(values);
       resetForm();
-
-      let newProduct = {
-        productName: values.productName,
-        storeName: values.storeName,
-        productUrl: values.productUrl,
-        quantity: values.quantity,
-        unitMeasure: values.unitMeasure,
-      };
-
-      setProductsList([newProduct, ...productsList]);
     },
   });
 
+  const addProductsList = (values: any) => {
+    let newProduct = {
+      productName: values?.productName || lastProduct,
+      storeName: values?.storeName,
+      productUrl: values?.productUrl,
+      price: values?.price,
+      quantity: values?.quantity,
+      unitMeasure: values?.unitMeasure,
+      quantityConverted: getQuantity(values?.unitMeasure, values?.quantity),
+      priceUnitMeasure: getPrice(
+        values?.unitMeasure,
+        values?.quantity,
+        values?.price
+      ),
+    };
+
+    setProductsList([newProduct, ...productsList]);
+  };
+
+  const getQuantity = (unitMeasure: string, quantity: number): number => {
+    if (unitMeasure === 'kg' || unitMeasure === 'l') {
+      return quantity * 1000;
+    } else {
+      return quantity;
+    }
+  };
+
+  const getPrice = (
+    unitMeasure: string,
+    quantity: number,
+    price: number
+  ): number => {
+    if (unitMeasure === 'kg' || unitMeasure === 'l') {
+      let quantityLittle = quantity * 1000;
+      return price / quantityLittle;
+    } else {
+      return price / quantity;
+    }
+  };
+
+  const saveLastProduct = (values: any) => {
+    if (lastUnitMeasure) values.unitMeasure = lastUnitMeasure;
+
+    setLastProduct(values.productName);
+    setLastUnitMeasure(values.unitMeasure);
+  };
+
   return (
     <Container className='vh-100 py-5'>
-      <Row>
-        <Col md={{ span: 3 }}>
+      <Row className='h-100'>
+        <Col md={{ span: 4 }}>
           <h1>New product</h1>
           <form onSubmit={formik.handleSubmit}>
             <div className='w-100 d-flex flex-column mb-3'>
               <label htmlFor='productName'>Product name</label>
-              <input
-                id='productName'
-                name='productName'
-                type='text'
-                onChange={formik.handleChange}
-                value={formik.values.productName}
-              />
-              {formik.errors.productName ? (
-                <div>{formik.errors.productName}</div>
-              ) : null}
+
+              <div className='w-100 d-flex flex-column'>
+                <input
+                  id='productName'
+                  name='productName'
+                  type='text'
+                  onChange={formik.handleChange}
+                  value={formik.values.productName}
+                />
+                <ErrorValidation message={formik.errors.productName} />
+              </div>
             </div>
             <div className='w-100 d-flex flex-column mb-3'>
               <label htmlFor='storeName'>Store</label>
               <Select
+                ref={storesRef}
                 className='basic-single'
                 classNamePrefix='select'
                 defaultValue={storesOptions[0]}
@@ -92,9 +147,17 @@ function App() {
                 onChange={formik.handleChange}
                 value={formik.values.productUrl}
               />
-              {formik.errors.productUrl ? (
-                <div>{formik.errors.productUrl}</div>
-              ) : null}
+            </div>
+            <div className='w-100 d-flex flex-column mb-3'>
+              <label htmlFor='price'>Price</label>
+              <input
+                id='price'
+                name='price'
+                type='number'
+                onChange={formik.handleChange}
+                value={formik.values.price}
+              />
+              <ErrorValidation message={formik.errors.price} />
             </div>
             <div className='w-100 d-flex flex-column mb-3'>
               <label htmlFor='quantity'>Weight or units</label>
@@ -105,82 +168,45 @@ function App() {
                 onChange={formik.handleChange}
                 value={formik.values.quantity}
               />
-              {formik.errors.quantity ? (
-                <div>{formik.errors.quantity}</div>
-              ) : null}
+              <ErrorValidation message={formik.errors.quantity} />
             </div>
             <div>
-              <label className='w-100'>Unit of measure</label>
-              <div className='radio-box'>
-                <input
-                  id='milliliters'
-                  type='radio'
-                  name='milliliters'
-                  value='ml'
-                  checked={formik.values.unitMeasure === 'ml'}
-                  onChange={() => formik.setFieldValue('unitMeasure', 'ml')}
-                />
-                <label htmlFor='milliliters' className='me-2'>
-                  ml
-                </label>
-                <input
-                  id='liters'
-                  type='radio'
-                  name='liters'
-                  value='l'
-                  checked={formik.values.unitMeasure === 'l'}
-                  onChange={() => formik.setFieldValue('unitMeasure', 'l')}
-                />
-                <label htmlFor='liters' className='me-2'>
-                  L
-                </label>
-                <input
-                  id='grams'
-                  type='radio'
-                  name='grams'
-                  value='g'
-                  checked={formik.values.unitMeasure === 'g'}
-                  onChange={() => formik.setFieldValue('unitMeasure', 'g')}
-                />
-                <label htmlFor='grams' className='me-2'>
-                  g
-                </label>
-                <input
-                  id='kilograms'
-                  type='radio'
-                  name='kilograms'
-                  value='kg'
-                  checked={formik.values.unitMeasure === 'kg'}
-                  onChange={() => formik.setFieldValue('unitMeasure', 'kg')}
-                />
-                <label htmlFor='kilograms' className='me-2'>
-                  kg
-                </label>
-                <input
-                  id='pieces'
-                  type='radio'
-                  name='pieces'
-                  value='pieces'
-                  checked={formik.values.unitMeasure === 'pieces'}
-                  onChange={() => formik.setFieldValue('unitMeasure', 'pieces')}
-                />
-                <label htmlFor='pieces'>Pieces</label>
-              </div>
-              {formik.errors.unitMeasure ? (
-                <div>{formik.errors.unitMeasure}</div>
-              ) : null}
+              <label htmlFor='unitMeasure'>Unit of measure</label>
+              <Select
+                ref={unitMeasureRef}
+                className='basic-single'
+                classNamePrefix='select'
+                defaultValue={unitMeasureOptions[0]}
+                name='unitMeasure'
+                options={unitMeasureOptions}
+                onChange={(selectedUnitMeasure) =>
+                  formik.setFieldValue(
+                    'unitMeasure',
+                    selectedUnitMeasure?.value
+                  )
+                }
+              />
             </div>
 
-            <Button variant='outline-dark' type='submit'>
-              Dark
+            <Button variant='outline-primary' type='submit'>
+              Add product
             </Button>
           </form>
         </Col>
 
-        <Col md={{ span: 3 }}>
-          {productsList.map((product: any, index: number) => (
-            <p key={index}>{product?.productName} </p>
-          ))}
+        <Col md={{ span: 4 }} className='h-100'>
+          <h1>Products</h1>
+          <div className='overflow-scroll h-calc'>
+            {productsList
+              .sort((firstElement, secondElement) =>
+                firstElement.priceUnitMeasure > secondElement.priceUnitMeasure
+                  ? 1
+                  : -1
+              )
+              .map((product, index) => (
+                <ProductDetails product={product} key={index} />
+              ))}
+          </div>
         </Col>
       </Row>
     </Container>
