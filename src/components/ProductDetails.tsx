@@ -1,10 +1,10 @@
 import { formatter } from '../components/utils/formatValue';
 import { Stores } from '../enum/storesEnum';
 
-export default function ProductDetails({ product }: any) {
+export default function ProductDetails(props: any) {
   const getUnitMeasure = (): string => {
-    const unitMeasure = product?.unitMeasure;
-    let unitMeasureText = product?.unitMeasure;
+    const unitMeasure = props.product?.unitMeasure;
+    let unitMeasureText = props.product?.unitMeasure;
 
     if (unitMeasure === 'kg') {
       unitMeasureText = 'g';
@@ -17,14 +17,22 @@ export default function ProductDetails({ product }: any) {
     return unitMeasureText;
   };
 
+  const handleAdd = (product: any) => {
+    props.onSelectProduct(product);
+  };
+
   return (
     <div className='p-3 bg-light-gray rounded mb-3 shadow-sm'>
       <div className='text-center mb-3'>
-        <p className='m-0 fw-light'>{product?.productName}</p>
+        <p className='m-0 fw-light'>{props.product?.productName}</p>
         <p className='m-0 text-steal'>
-          {Stores[product?.storeName]}
-          {product?.productUrl && (
-            <a href={product?.productUrl} target='_blank' rel='noreferrer'>
+          {Stores[props.product?.storeName]}
+          {props.product?.productUrl && (
+            <a
+              href={props.product?.productUrl}
+              target='_blank'
+              rel='noreferrer'
+            >
               <i className='ms-2 fa-solid fa-arrow-up-right-from-square'></i>
             </a>
           )}
@@ -32,22 +40,29 @@ export default function ProductDetails({ product }: any) {
       </div>
       <div className='d-flex justify-content-between'>
         <div className='text-center h-100 lh-sm'>
-          <p className='m-0 fw-semibold'>{formatter.format(product?.price)}</p>
+          <p className='m-0 fw-semibold'>
+            {formatter.format(props.product?.price)}
+          </p>
           <p className='m-0 fs-8'>PRICE</p>
         </div>
         <div className='text-center h-100 lh-sm'>
           <p className='m-0 fw-semibold'>
-            {product?.quantityConverted} {getUnitMeasure()}
+            {props.product?.quantityConverted} {getUnitMeasure()}
           </p>
           <p className='m-0 fs-8'>WEIGHT</p>
         </div>
         <div className='text-center h-100 lh-sm'>
           <p className='m-0 fw-bold'>
-            {formatter.format(product?.priceUnitMeasure)}
+            {formatter.format(props.product?.priceUnitMeasure)}
           </p>
           <p className='m-0 fs-8'>UNIT PRICE</p>
         </div>
       </div>
+      {props.showButton && (
+        <div>
+          <button onClick={() => handleAdd(props.product)}>Add</button>
+        </div>
+      )}
     </div>
   );
 }
