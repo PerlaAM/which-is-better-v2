@@ -34,6 +34,12 @@ function App() {
   const [productsList, setProductsList] = useState<IProduct[]>([]);
   const [lastProduct, setLastProduct] = useState('');
   const [lastUnitMeasure, setLastUnitMeasure] = useState(0);
+  const [productsToBuy, setProductsToBuy] = useState<IProduct[]>([]);
+
+  useEffect(() => {
+    if (localStorage.getItem('productsToBuyList'))
+      setProductsToBuy(JSON.parse(localStorage.getItem('productsToBuyList')!));
+  }, []);
 
   useEffect(() => {
     formik.setFieldValue('productName', lastProduct);
@@ -102,6 +108,14 @@ function App() {
 
     setLastProduct(values.productName);
     setLastUnitMeasure(values.unitMeasure);
+  };
+
+  const handleAddToShopping = (product: any) => {
+    setProductsToBuy([product, ...productsToBuy]);
+    localStorage.setItem(
+      'productsToBuyList',
+      JSON.stringify([product, ...productsToBuy])
+    );
   };
 
   return (
@@ -204,8 +218,27 @@ function App() {
                   : -1
               )
               .map((product, index) => (
-                <ProductDetails product={product} key={index} />
+                <ProductDetails
+                  product={product}
+                  key={index}
+                  showButton={true}
+                  onSelectProduct={handleAddToShopping}
+                />
               ))}
+          </div>
+        </Col>
+
+        <Col md={{ span: 4 }} className='h-100'>
+          <h1>Shopping Cart</h1>
+          <div className='overflow-scroll h-calc'>
+            {productsToBuy.map((product, index) => (
+              <ProductDetails
+                product={product}
+                key={index}
+                showButton={false}
+                onSelectProduct={handleAddToShopping}
+              />
+            ))}
           </div>
         </Col>
       </Row>
