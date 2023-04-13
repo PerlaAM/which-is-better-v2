@@ -118,9 +118,26 @@ function App() {
     );
   };
 
+  const handleClearProductList = () => {
+    setProductsList([]);
+    setLastProduct('');
+    setLastUnitMeasure(0);
+    unitMeasureRef.current.setValue(unitMeasureOptions[0]);
+  };
+
   return (
     <Container className='vh-100 py-5'>
-      <Row className='h-100'>
+      <Row className=''>
+        <Col md={{ span: 12 }} className='mb-4 d-flex justify-content-end'>
+          <Button
+            variant='outline-secondary'
+            type='submit'
+            disabled={productsList.length < 1}
+            onClick={() => handleClearProductList()}
+          >
+            Clear
+          </Button>
+        </Col>
         <Col md={{ span: 4 }}>
           <h1>New product</h1>
           <form onSubmit={formik.handleSubmit}>
