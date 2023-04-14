@@ -3,7 +3,6 @@ import { useFormik } from 'formik';
 import { storesOptions } from './data/stores';
 import { unitMeasureOptions } from './data/unitMeasures';
 import { IProduct } from './interfaces/productInterfaces';
-import { UnitMeasures } from './enum/unitMeasuresEnum';
 import ProductDetails from './components/ProductDetails';
 import ErrorValidation from './components/ErrorValidation';
 import Container from 'react-bootstrap/Container';
@@ -32,32 +31,33 @@ function App() {
   const storesRef: any = useRef(null);
   const unitMeasureRef: any = useRef(null);
   const [productsList, setProductsList] = useState<IProduct[]>([]);
-  const [lastProduct, setLastProduct] = useState('');
-  const [lastUnitMeasure, setLastUnitMeasure] = useState(0);
   const [productsToBuy, setProductsToBuy] = useState<IProduct[]>([]);
+  const [keepProduct, setKeepProduct] = useState({
+    productName: '',
+    storeName: storesOptions[0].value,
+    unitMeasure: unitMeasureOptions[0].value,
+  });
 
   useEffect(() => {
     if (localStorage.getItem('productsToBuyList'))
       setProductsToBuy(JSON.parse(localStorage.getItem('productsToBuyList')!));
   }, []);
 
-  useEffect(() => {
-    formik.setFieldValue('productName', lastProduct);
-  }, [lastProduct]);
+  useEffect(() => {}, [keepProduct]);
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      productName: lastProduct,
-      storeName: storesOptions[0].value,
+      productName: keepProduct.productName,
+      storeName: keepProduct.storeName,
       productUrl: '',
       price: 0.0,
       quantity: 0,
-      unitMeasure: UnitMeasures[lastUnitMeasure],
+      unitMeasure: keepProduct.unitMeasure,
     },
     validate,
     onSubmit: (values, { resetForm }) => {
-      saveLastProduct(values);
+      saveFirstProduct(values);
       addProductsList(values);
       resetForm();
     },
@@ -65,7 +65,7 @@ function App() {
 
   const addProductsList = (values: any) => {
     let newProduct = {
-      productName: values?.productName || lastProduct,
+      productName: values?.productName,
       storeName: values?.storeName,
       productUrl: values?.productUrl,
       price: values?.price,
@@ -103,11 +103,13 @@ function App() {
     }
   };
 
-  const saveLastProduct = (values: any) => {
-    if (lastUnitMeasure) values.unitMeasure = lastUnitMeasure;
-
-    setLastProduct(values.productName);
-    setLastUnitMeasure(values.unitMeasure);
+  const saveFirstProduct = (values: any) => {
+    let product = {
+      productName: values.productName,
+      storeName: values.storeName,
+      unitMeasure: values.unitMeasure,
+    };
+    setKeepProduct(product);
   };
 
   const handleAddToShopping = (product: any) => {
@@ -120,9 +122,13 @@ function App() {
 
   const handleClearProductList = () => {
     setProductsList([]);
-    setLastProduct('');
-    setLastUnitMeasure(0);
+    setKeepProduct({
+      productName: '',
+      storeName: storesOptions[0].value,
+      unitMeasure: unitMeasureOptions[0].value,
+    });
     unitMeasureRef.current.setValue(unitMeasureOptions[0]);
+    storesRef.current.setValue(storesOptions[0]);
   };
 
   const handleClearShoppingCart = () => {
@@ -140,14 +146,13 @@ function App() {
           <form onSubmit={formik.handleSubmit}>
             <div className='w-100 d-flex flex-column mb-3'>
               <label htmlFor='productName'>Product name</label>
-
               <div className='w-100 d-flex flex-column'>
                 <input
                   id='productName'
                   name='productName'
                   type='text'
                   onChange={formik.handleChange}
-                  value={formik.values.productName}
+                  value={formik.values.productName || keepProduct.productName}
                 />
                 <ErrorValidation message={formik.errors.productName} />
               </div>
