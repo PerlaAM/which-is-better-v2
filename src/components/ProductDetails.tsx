@@ -1,5 +1,6 @@
 import { formatter } from '../components/utils/formatValue';
 import { Stores } from '../enum/storesEnum';
+import Button from 'react-bootstrap/Button';
 
 export default function ProductDetails(props: any) {
   const getUnitMeasure = (): string => {
@@ -60,7 +61,7 @@ export default function ProductDetails(props: any) {
       </div>
       {props.showButton && (
         <div>
-          <button onClick={() => handleAdd(props.product)}>Add</button>
+          <Button onClick={() => handleAdd(props.product)}>Add</Button>
         </div>
       )}
     </div>
