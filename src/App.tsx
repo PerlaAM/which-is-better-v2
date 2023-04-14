@@ -3,6 +3,7 @@ import { useFormik } from 'formik';
 import { storesOptions } from './data/stores';
 import { unitMeasureOptions } from './data/unitMeasures';
 import { IProduct } from './interfaces/productInterfaces';
+import { formatter } from './components/utils/formatValue';
 import ProductDetails from './components/ProductDetails';
 import ErrorValidation from './components/ErrorValidation';
 import Container from 'react-bootstrap/Container';
@@ -110,6 +111,15 @@ function App() {
       unitMeasure: values.unitMeasure,
     };
     setKeepProduct(product);
+  };
+
+  const getTotalAmount = (): number => {
+    let totalAmount = 0.0;
+
+    productsToBuy.map((product) => {
+      totalAmount += product?.price;
+    });
+    return totalAmount;
   };
 
   const handleAddToShopping = (product: any) => {
@@ -277,7 +287,7 @@ function App() {
               Clear
             </Button>
           </div>
-          <div className='overflow-scroll h-calc'>
+          <div className='overflow-scroll h-calc-cart'>
             {productsToBuy.map((product, index) => (
               <ProductDetails
                 product={product}
@@ -286,6 +296,14 @@ function App() {
                 onSelectProduct={handleAddToShopping}
               />
             ))}
+          </div>
+          <div>
+            <p className='fs-3 fw-light m-0 pt-3 text-end'>
+              Total:
+              <span className='fw-semibold ps-1'>
+                {formatter.format(getTotalAmount())}
+              </span>
+            </p>
           </div>
         </Col>
       </Row>
