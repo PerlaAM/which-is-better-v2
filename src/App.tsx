@@ -113,11 +113,19 @@ function App() {
   };
 
   const handleAddToShopping = (product: any) => {
-    setProductsToBuy([product, ...productsToBuy]);
-    localStorage.setItem(
-      'productsToBuyList',
-      JSON.stringify([product, ...productsToBuy])
-    );
+    if (
+      !productsToBuy.find(
+        (productToBuy) =>
+          productToBuy.price === product.price &&
+          productToBuy.quantity === product.quantity
+      )
+    ) {
+      setProductsToBuy([product, ...productsToBuy]);
+      localStorage.setItem(
+        'productsToBuyList',
+        JSON.stringify([product, ...productsToBuy])
+      );
+    }
   };
 
   const handleClearProductList = () => {
