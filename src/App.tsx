@@ -125,21 +125,18 @@ function App() {
     unitMeasureRef.current.setValue(unitMeasureOptions[0]);
   };
 
+  const handleClearShoppingCart = () => {
+    setProductsToBuy([]);
+    localStorage.removeItem('productsToBuyList');
+  };
+
   return (
     <Container className='vh-100 py-5'>
-      <Row className=''>
-        <Col md={{ span: 12 }} className='mb-4 d-flex justify-content-end'>
-          <Button
-            variant='outline-secondary'
-            type='submit'
-            disabled={productsList.length < 1}
-            onClick={() => handleClearProductList()}
-          >
-            Clear
-          </Button>
-        </Col>
+      <Row className='h-100'>
         <Col md={{ span: 4 }}>
-          <h1>New product</h1>
+          <div className='mb-4'>
+            <h2 className='m-0'>New product</h2>
+          </div>
           <form onSubmit={formik.handleSubmit}>
             <div className='w-100 d-flex flex-column mb-3'>
               <label htmlFor='productName'>Product name</label>
@@ -226,7 +223,17 @@ function App() {
         </Col>
 
         <Col md={{ span: 4 }} className='h-100'>
-          <h1>Products</h1>
+          <div className='d-flex justify-content-between mb-4'>
+            <h2 className='m-0'>Products</h2>
+            <Button
+              variant='outline-secondary'
+              type='submit'
+              disabled={productsList.length < 1}
+              onClick={() => handleClearProductList()}
+            >
+              Clear
+            </Button>
+          </div>
           <div className='overflow-scroll h-calc'>
             {productsList
               .sort((firstElement, secondElement) =>
@@ -246,7 +253,17 @@ function App() {
         </Col>
 
         <Col md={{ span: 4 }} className='h-100'>
-          <h1>Shopping Cart</h1>
+          <div className='d-flex justify-content-between mb-4'>
+            <h2 className='m-0'>Shopping Cart</h2>
+            <Button
+              variant='outline-secondary'
+              type='submit'
+              disabled={productsToBuy.length < 1}
+              onClick={() => handleClearShoppingCart()}
+            >
+              Clear
+            </Button>
+          </div>
           <div className='overflow-scroll h-calc'>
             {productsToBuy.map((product, index) => (
               <ProductDetails
