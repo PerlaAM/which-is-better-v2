@@ -41,7 +41,9 @@ function App() {
 
   useEffect(() => {
     if (localStorage.getItem('productsToBuyList'))
-      setProductsToBuy(JSON.parse(localStorage.getItem('productsToBuyList')!));
+      setProductsToBuy(
+        JSON.parse(localStorage.getItem('productsToBuyList') || '{}')
+      );
   }, []);
 
   useEffect(() => {}, [keepProduct]);
@@ -127,7 +129,8 @@ function App() {
       !productsToBuy.find(
         (productToBuy) =>
           productToBuy.price === product.price &&
-          productToBuy.quantity === product.quantity
+          productToBuy.quantity === product.quantity &&
+          productToBuy.productName === product.productName
       )
     ) {
       setProductsToBuy([product, ...productsToBuy]);
@@ -136,6 +139,20 @@ function App() {
         JSON.stringify([product, ...productsToBuy])
       );
     }
+  };
+
+  const handleRemoveProduct = (product: any) => {
+    setProductsToBuy((productsCart) =>
+      productsCart.filter(
+        (productCart) => productCart.productName !== product.productName
+      )
+    );
+
+    let productsCartList = JSON.parse(
+      localStorage.getItem('productsToBuyList') || '{}'
+    );
+    productsCartList.splice(productsToBuy.indexOf(product), 1);
+    localStorage.setItem('productsToBuyList', JSON.stringify(productsCartList));
   };
 
   const handleClearProductList = () => {
@@ -250,7 +267,6 @@ function App() {
             <h2 className='m-0'>Products</h2>
             <Button
               variant='outline-secondary'
-              type='submit'
               disabled={productsList.length < 1}
               onClick={() => handleClearProductList()}
             >
@@ -277,10 +293,14 @@ function App() {
 
         <Col md={{ span: 4 }} className='h-100'>
           <div className='d-flex justify-content-between mb-4'>
-            <h2 className='m-0'>Shopping Cart</h2>
+            <h2 className='m-0'>
+              Shopping Cart{' '}
+              {productsToBuy.length >= 1 && (
+                <span>({productsToBuy.length})</span>
+              )}{' '}
+            </h2>
             <Button
               variant='outline-secondary'
-              type='submit'
               disabled={productsToBuy.length < 1}
               onClick={() => handleClearShoppingCart()}
             >
@@ -292,8 +312,9 @@ function App() {
               <ProductDetails
                 product={product}
                 key={index}
-                showButton={false}
+                showRemoveButton={true}
                 onSelectProduct={handleAddToShopping}
+                onRemoveProduct={handleRemoveProduct}
               />
             ))}
           </div>
