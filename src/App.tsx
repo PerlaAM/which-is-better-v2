@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import { storesOptions } from './data/stores';
 import { unitMeasureOptions } from './data/unitMeasures';
 import { IProduct } from './interfaces/productInterfaces';
-import { UnitMeasures } from './enum/unitMeasuresEnum';
+import { formatter } from './components/utils/formatValue';
 import ProductDetails from './components/ProductDetails';
 import ErrorValidation from './components/ErrorValidation';
 import Container from 'react-bootstrap/Container';
@@ -32,32 +32,35 @@ function App() {
   const storesRef: any = useRef(null);
   const unitMeasureRef: any = useRef(null);
   const [productsList, setProductsList] = useState<IProduct[]>([]);
-  const [lastProduct, setLastProduct] = useState('');
-  const [lastUnitMeasure, setLastUnitMeasure] = useState(0);
   const [productsToBuy, setProductsToBuy] = useState<IProduct[]>([]);
+  const [keepProduct, setKeepProduct] = useState({
+    productName: '',
+    storeName: storesOptions[0].value,
+    unitMeasure: unitMeasureOptions[0].value,
+  });
 
   useEffect(() => {
     if (localStorage.getItem('productsToBuyList'))
-      setProductsToBuy(JSON.parse(localStorage.getItem('productsToBuyList')!));
+      setProductsToBuy(
+        JSON.parse(localStorage.getItem('productsToBuyList') || '{}')
+      );
   }, []);
 
-  useEffect(() => {
-    formik.setFieldValue('productName', lastProduct);
-  }, [lastProduct]);
+  useEffect(() => {}, [keepProduct]);
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      productName: lastProduct,
-      storeName: storesOptions[0].value,
+      productName: keepProduct.productName,
+      storeName: keepProduct.storeName,
       productUrl: '',
       price: 0.0,
       quantity: 0,
-      unitMeasure: UnitMeasures[lastUnitMeasure],
+      unitMeasure: keepProduct.unitMeasure,
     },
     validate,
     onSubmit: (values, { resetForm }) => {
-      saveLastProduct(values);
+      saveFirstProduct(values);
       addProductsList(values);
       resetForm();
     },
@@ -65,7 +68,7 @@ function App() {
 
   const addProductsList = (values: any) => {
     let newProduct = {
-      productName: values?.productName || lastProduct,
+      productName: values?.productName,
       storeName: values?.storeName,
       productUrl: values?.productUrl,
       price: values?.price,
@@ -103,26 +106,64 @@ function App() {
     }
   };
 
-  const saveLastProduct = (values: any) => {
-    if (lastUnitMeasure) values.unitMeasure = lastUnitMeasure;
+  const saveFirstProduct = (values: any) => {
+    let product = {
+      productName: values.productName,
+      storeName: values.storeName,
+      unitMeasure: values.unitMeasure,
+    };
+    setKeepProduct(product);
+  };
 
-    setLastProduct(values.productName);
-    setLastUnitMeasure(values.unitMeasure);
+  const getTotalAmount = (): number => {
+    let totalAmount = 0.0;
+
+    productsToBuy.map((product) => {
+      totalAmount += product?.price;
+    });
+    return totalAmount;
   };
 
   const handleAddToShopping = (product: any) => {
-    setProductsToBuy([product, ...productsToBuy]);
-    localStorage.setItem(
-      'productsToBuyList',
-      JSON.stringify([product, ...productsToBuy])
+    if (
+      !productsToBuy.find(
+        (productToBuy) =>
+          productToBuy.price === product.price &&
+          productToBuy.quantity === product.quantity &&
+          productToBuy.productName === product.productName
+      )
+    ) {
+      setProductsToBuy([product, ...productsToBuy]);
+      localStorage.setItem(
+        'productsToBuyList',
+        JSON.stringify([product, ...productsToBuy])
+      );
+    }
+  };
+
+  const handleRemoveProduct = (product: any) => {
+    setProductsToBuy((productsCart) =>
+      productsCart.filter(
+        (productCart) => productCart.productName !== product.productName
+      )
     );
+
+    let productsCartList = JSON.parse(
+      localStorage.getItem('productsToBuyList') || '{}'
+    );
+    productsCartList.splice(productsToBuy.indexOf(product), 1);
+    localStorage.setItem('productsToBuyList', JSON.stringify(productsCartList));
   };
 
   const handleClearProductList = () => {
     setProductsList([]);
-    setLastProduct('');
-    setLastUnitMeasure(0);
+    setKeepProduct({
+      productName: '',
+      storeName: storesOptions[0].value,
+      unitMeasure: unitMeasureOptions[0].value,
+    });
     unitMeasureRef.current.setValue(unitMeasureOptions[0]);
+    storesRef.current.setValue(storesOptions[0]);
   };
 
   const handleClearShoppingCart = () => {
@@ -140,14 +181,13 @@ function App() {
           <form onSubmit={formik.handleSubmit}>
             <div className='w-100 d-flex flex-column mb-3'>
               <label htmlFor='productName'>Product name</label>
-
               <div className='w-100 d-flex flex-column'>
                 <input
                   id='productName'
                   name='productName'
                   type='text'
                   onChange={formik.handleChange}
-                  value={formik.values.productName}
+                  value={formik.values.productName || keepProduct.productName}
                 />
                 <ErrorValidation message={formik.errors.productName} />
               </div>
@@ -227,7 +267,6 @@ function App() {
             <h2 className='m-0'>Products</h2>
             <Button
               variant='outline-secondary'
-              type='submit'
               disabled={productsList.length < 1}
               onClick={() => handleClearProductList()}
             >
@@ -254,25 +293,38 @@ function App() {
 
         <Col md={{ span: 4 }} className='h-100'>
           <div className='d-flex justify-content-between mb-4'>
-            <h2 className='m-0'>Shopping Cart</h2>
+            <h2 className='m-0'>
+              Shopping Cart{' '}
+              {productsToBuy.length >= 1 && (
+                <span>({productsToBuy.length})</span>
+              )}{' '}
+            </h2>
             <Button
               variant='outline-secondary'
-              type='submit'
               disabled={productsToBuy.length < 1}
               onClick={() => handleClearShoppingCart()}
             >
               Clear
             </Button>
           </div>
-          <div className='overflow-scroll h-calc'>
+          <div className='overflow-scroll h-calc-cart'>
             {productsToBuy.map((product, index) => (
               <ProductDetails
                 product={product}
                 key={index}
-                showButton={false}
+                showRemoveButton={true}
                 onSelectProduct={handleAddToShopping}
+                onRemoveProduct={handleRemoveProduct}
               />
             ))}
+          </div>
+          <div>
+            <p className='fs-3 fw-light m-0 pt-3 text-end'>
+              Total:
+              <span className='fw-semibold ps-1'>
+                {formatter.format(getTotalAmount())}
+              </span>
+            </p>
           </div>
         </Col>
       </Row>
