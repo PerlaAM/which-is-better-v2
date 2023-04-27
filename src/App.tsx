@@ -6,11 +6,12 @@ import { IProduct } from './interfaces/productInterfaces';
 import { formatter } from './components/utils/formatValue';
 import ProductDetails from './components/ProductDetails';
 import ErrorValidation from './components/ErrorValidation';
+import ConfirmationModal from './components/ConfirmationModal';
+import Select from 'react-select';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
-import Select from 'react-select';
 
 type Errors = {
   productName?: string;
@@ -38,6 +39,8 @@ function App() {
     storeName: storesOptions[0].value,
     unitMeasure: unitMeasureOptions[0].value,
   });
+  const [showProductsList, setShowProductsList] = useState(false);
+  const [showProductsToBuyModal, setShowProductsToBuyModal] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem('productsToBuyList'))
@@ -164,12 +167,22 @@ function App() {
     });
     unitMeasureRef.current.setValue(unitMeasureOptions[0]);
     storesRef.current.setValue(storesOptions[0]);
+    handleCloseProductsList();
   };
 
   const handleClearShoppingCart = () => {
     setProductsToBuy([]);
     localStorage.removeItem('productsToBuyList');
+    handleCloseProductsToBuyModal();
   };
+
+  const handleShowProductsList = () => setShowProductsList(true);
+
+  const handleCloseProductsList = () => setShowProductsList(false);
+
+  const handleShowProductsToBuyModal = () => setShowProductsToBuyModal(true);
+
+  const handleCloseProductsToBuyModal = () => setShowProductsToBuyModal(false);
 
   return (
     <Container className='vh-100 py-5'>
@@ -268,7 +281,7 @@ function App() {
             <Button
               variant='outline-secondary'
               disabled={productsList.length < 1}
-              onClick={() => handleClearProductList()}
+              onClick={() => handleShowProductsList()}
             >
               Clear
             </Button>
@@ -302,7 +315,7 @@ function App() {
             <Button
               variant='outline-secondary'
               disabled={productsToBuy.length < 1}
-              onClick={() => handleClearShoppingCart()}
+              onClick={() => handleShowProductsToBuyModal()}
             >
               Clear
             </Button>
@@ -328,6 +341,20 @@ function App() {
           </div>
         </Col>
       </Row>
+      <ConfirmationModal
+        show={showProductsList}
+        onAction={handleClearProductList}
+        handleClose={handleCloseProductsList}
+        title={'Clear products'}
+        description={'Are you sure you want to empty the products?'}
+      />
+      <ConfirmationModal
+        show={showProductsToBuyModal}
+        onAction={handleClearShoppingCart}
+        handleClose={handleCloseProductsToBuyModal}
+        title={'Clear shoppingCart'}
+        description={'Are you sure you want to empty shopping cart?'}
+      />
     </Container>
   );
 }
