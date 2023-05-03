@@ -35,6 +35,7 @@ function App() {
   const unitMeasureRef: any = useRef(null);
   const [productsList, setProductsList] = useState<IProduct[]>([]);
   const [productsToBuy, setProductsToBuy] = useState<IProduct[]>([]);
+  const [unitMeasures, setUnitMeasures] = useState(unitMeasureOptions);
   const [keepProduct, setKeepProduct] = useState({
     productName: '',
     storeName: storesOptions[0].value,
@@ -116,6 +117,14 @@ function App() {
       storeName: values.storeName,
       unitMeasure: values.unitMeasure,
     };
+    let unitMeasure = unitMeasureOptions.find(
+      (unit) => unit.value === product?.unitMeasure
+    );
+    let unitMeasureTypes = unitMeasureOptions.filter(
+      ({ type }) => type === unitMeasure?.type
+    );
+
+    setUnitMeasures(unitMeasureTypes);
     setKeepProduct(product);
   };
 
@@ -266,7 +275,7 @@ function App() {
                   <ErrorValidation message={formik.errors.price} />
                 </div>
                 <div className='w-50 d-flex flex-column mb-3 ms-2'>
-                  <label htmlFor='quantity'>Weight or units</label>
+                  <label htmlFor='quantity'>Weight or pieces</label>
                   <input
                     id='quantity'
                     name='quantity'
@@ -302,7 +311,7 @@ function App() {
                   }}
                   defaultValue={unitMeasureOptions[0]}
                   name='unitMeasure'
-                  options={unitMeasureOptions}
+                  options={unitMeasures}
                   onChange={(selectedUnitMeasure) =>
                     formik.setFieldValue(
                       'unitMeasure',
@@ -387,15 +396,19 @@ function App() {
                   </Button>
                 </div>
                 <div className='overflow-scroll h-calc-cart'>
-                  {productsToBuy.map((product, index) => (
-                    <ProductDetails
-                      product={product}
-                      key={index}
-                      showRemoveButton={true}
-                      onSelectProduct={handleAddToShopping}
-                      onRemoveProduct={handleRemoveProduct}
-                    />
-                  ))}
+                  {productsToBuy
+                    .sort((firstElement, secondElement) =>
+                      firstElement.storeName > secondElement.storeName ? 1 : -1
+                    )
+                    .map((product, index) => (
+                      <ProductDetails
+                        product={product}
+                        key={index}
+                        showRemoveButton={true}
+                        onSelectProduct={handleAddToShopping}
+                        onRemoveProduct={handleRemoveProduct}
+                      />
+                    ))}
                 </div>
                 <div>
                   <p className='text-end m-0 fw-light'>
