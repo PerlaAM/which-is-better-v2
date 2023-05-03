@@ -73,6 +73,7 @@ function App() {
 
   const addProductsList = (values: any) => {
     let newProduct = {
+      id: values?.productName + values?.quantity + Math.random(),
       productName: values?.productName,
       storeName: values?.storeName,
       productUrl: values?.productUrl,
@@ -156,9 +157,7 @@ function App() {
 
   const handleRemoveProduct = (product: any) => {
     setProductsToBuy((productsCart) =>
-      productsCart.filter(
-        (productCart) => productCart.productName !== product.productName
-      )
+      productsCart.filter((productCart) => productCart.id !== product.id)
     );
 
     let productsCartList = JSON.parse(
@@ -405,7 +404,6 @@ function App() {
                         product={product}
                         key={index}
                         showRemoveButton={true}
-                        onSelectProduct={handleAddToShopping}
                         onRemoveProduct={handleRemoveProduct}
                       />
                     ))}
