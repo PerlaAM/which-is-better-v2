@@ -8,6 +8,7 @@ import ProductDetails from './components/ProductDetails';
 import ErrorValidation from './components/ErrorValidation';
 import ConfirmationModal from './components/ConfirmationModal';
 import Header from './components/Header';
+import Footer from './components/Footer';
 import Select from 'react-select';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -196,7 +197,7 @@ function App() {
   return (
     <section>
       <Header />
-      <Container className='h-calc-header py-5'>
+      <Container className='h-calc-header py-3'>
         <Row className='h-100'>
           <Col md={{ span: 4 }}>
             <div className='mb-4'>
@@ -335,11 +336,7 @@ function App() {
           >
             {productsList.length > 0 && (
               <div className='h-100'>
-                <div
-                  className={`d-flex justify-content-between mb-4 ${
-                    productsList.length > 0 ? 'visible' : 'invisible'
-                  } `}
-                >
+                <div className='d-flex justify-content-between mb-4'>
                   <h2 className='m-0 text-dark'>Products</h2>
                   <Button
                     variant='outline-secondary'
@@ -404,11 +401,12 @@ function App() {
                         product={product}
                         key={index}
                         showRemoveButton={true}
+                        onSelectProduct={handleAddToShopping}
                         onRemoveProduct={handleRemoveProduct}
                       />
                     ))}
                 </div>
-                <div>
+                <div className='pt-3'>
                   <p className='text-end m-0 fw-light'>
                     Quantity:
                     {productsToBuy.length >= 1 && (
@@ -444,6 +442,7 @@ function App() {
           description={'Are you sure you want to empty shopping cart?'}
         />
       </Container>
+      <Footer />
     </section>
   );
 }

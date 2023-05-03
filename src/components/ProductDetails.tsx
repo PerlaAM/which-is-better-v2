@@ -4,7 +4,6 @@ import {
   faBagShopping,
   faTrashCan,
 } from '@fortawesome/free-solid-svg-icons';
-
 import { formatter } from '../components/utils/formatValue';
 import { Stores } from '../enum/storesEnum';
 import Button from 'react-bootstrap/Button';
@@ -86,7 +85,7 @@ export default function ProductDetails(props: any) {
         )}
         {props.showRemoveButton && (
           <Button
-            variant='primary'
+            variant='secondary'
             size='sm'
             onClick={() => handleRemove(props.product)}
           >
