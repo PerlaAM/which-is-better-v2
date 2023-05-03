@@ -202,6 +202,7 @@ function App() {
                     id='productName'
                     name='productName'
                     className='form-control'
+                    autoComplete='off'
                     type='text'
                     onChange={formik.handleChange}
                     value={formik.values.productName || keepProduct.productName}
@@ -215,6 +216,21 @@ function App() {
                   ref={storesRef}
                   className='basic-single'
                   classNamePrefix='select'
+                  theme={(theme) => ({
+                    ...theme,
+                    colors: {
+                      ...theme.colors,
+                      primary25: '#6ec4bc66',
+                      primary: '#6ec4bc',
+                    },
+                  })}
+                  styles={{
+                    control: (base) => ({
+                      ...base,
+                      border: 'none',
+                      background: '#6ec4bc3c',
+                    }),
+                  }}
                   defaultValue={storesOptions[0]}
                   name='storeName'
                   options={storesOptions}
@@ -229,6 +245,7 @@ function App() {
                   id='productUrl'
                   name='productUrl'
                   className='form-control'
+                  autoComplete='off'
                   type='text'
                   onChange={formik.handleChange}
                   value={formik.values.productUrl}
@@ -241,6 +258,7 @@ function App() {
                     id='price'
                     name='price'
                     className='form-control'
+                    autoComplete='off'
                     type='number'
                     onChange={formik.handleChange}
                     value={formik.values.price}
@@ -253,6 +271,7 @@ function App() {
                     id='quantity'
                     name='quantity'
                     className='form-control'
+                    autoComplete='off'
                     type='number'
                     onChange={formik.handleChange}
                     value={formik.values.quantity}
@@ -266,6 +285,21 @@ function App() {
                   ref={unitMeasureRef}
                   className='basic-single'
                   classNamePrefix='select'
+                  theme={(theme) => ({
+                    ...theme,
+                    colors: {
+                      ...theme.colors,
+                      primary25: '#6ec4bc66',
+                      primary: '#6ec4bc',
+                    },
+                  })}
+                  styles={{
+                    control: (base) => ({
+                      ...base,
+                      border: 'none',
+                      background: '#6ec4bc3c',
+                    }),
+                  }}
                   defaultValue={unitMeasureOptions[0]}
                   name='unitMeasure'
                   options={unitMeasureOptions}
@@ -285,7 +319,12 @@ function App() {
             </form>
           </Col>
 
-          <Col md={{ span: 4 }} className='h-100 border-start'>
+          <Col
+            md={{ span: 4 }}
+            className={`h-100  ${
+              productsList.length > 0 ? 'border-start' : ''
+            } `}
+          >
             {productsList.length > 0 && (
               <div className='h-100'>
                 <div
@@ -328,7 +367,12 @@ function App() {
             )}
           </Col>
 
-          <Col md={{ span: 4 }} className='h-100 border-start'>
+          <Col
+            md={{ span: 4 }}
+            className={`h-100  ${
+              productsToBuy.length > 0 ? 'border-start' : ''
+            } `}
+          >
             {productsToBuy.length > 0 && (
               <div className='h-100'>
                 <div className='d-flex justify-content-between mb-4'>
