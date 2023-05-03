@@ -45,3 +45,12 @@ input[type='text'] {
 label {
   color: #274542;
 }
+
+@media only screen and (max-width: 600px) {
+  .h-calc-header {
+    height: 100%;
+  }
+  .ptm-3 {
+    padding-top: 4rem;
+  }
+}

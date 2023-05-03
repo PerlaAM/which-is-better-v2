@@ -335,7 +335,7 @@ function App() {
             } `}
           >
             {productsList.length > 0 && (
-              <div className='h-100'>
+              <div className='h-100 ptm-3'>
                 <div className='d-flex justify-content-between mb-4'>
                   <h2 className='m-0 text-dark'>Products</h2>
                   <Button
@@ -379,7 +379,7 @@ function App() {
             } `}
           >
             {productsToBuy.length > 0 && (
-              <div className='h-100'>
+              <div className='h-100 ptm-3'>
                 <div className='d-flex justify-content-between mb-4'>
                   <h2 className='m-0 text-dark'>Shopping Cart</h2>
                   <Button
