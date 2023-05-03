@@ -7,6 +7,7 @@ import { formatter } from './components/utils/formatValue';
 import ProductDetails from './components/ProductDetails';
 import ErrorValidation from './components/ErrorValidation';
 import ConfirmationModal from './components/ConfirmationModal';
+import Header from './components/Header';
 import Select from 'react-select';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -185,177 +186,210 @@ function App() {
   const handleCloseProductsToBuyModal = () => setShowProductsToBuyModal(false);
 
   return (
-    <Container className='vh-100 py-5'>
-      <Row className='h-100'>
-        <Col md={{ span: 4 }}>
-          <div className='mb-4'>
-            <h2 className='m-0'>New product</h2>
-          </div>
-          <form onSubmit={formik.handleSubmit}>
-            <div className='w-100 d-flex flex-column mb-3'>
-              <label htmlFor='productName'>Product name</label>
-              <div className='w-100 d-flex flex-column'>
+    <section>
+      <Header />
+      <Container className='h-calc-header py-5'>
+        <Row className='h-100'>
+          <Col md={{ span: 4 }}>
+            <div className='mb-4'>
+              <h2 className='m-0 text-dark'>New product</h2>
+            </div>
+            <form onSubmit={formik.handleSubmit}>
+              <div className='w-100 d-flex flex-column mb-3'>
+                <label htmlFor='productName'>Product name</label>
+                <div className='w-100 d-flex flex-column'>
+                  <input
+                    id='productName'
+                    name='productName'
+                    className='form-control'
+                    type='text'
+                    onChange={formik.handleChange}
+                    value={formik.values.productName || keepProduct.productName}
+                  />
+                  <ErrorValidation message={formik.errors.productName} />
+                </div>
+              </div>
+              <div className='w-100 d-flex flex-column mb-3'>
+                <label htmlFor='storeName'>Store</label>
+                <Select
+                  ref={storesRef}
+                  className='basic-single'
+                  classNamePrefix='select'
+                  defaultValue={storesOptions[0]}
+                  name='storeName'
+                  options={storesOptions}
+                  onChange={(selectedStore) =>
+                    formik.setFieldValue('storeName', selectedStore?.value)
+                  }
+                />
+              </div>
+              <div className='w-100 d-flex flex-column mb-3'>
+                <label htmlFor='productUrl'>Product URL</label>
                 <input
-                  id='productName'
-                  name='productName'
+                  id='productUrl'
+                  name='productUrl'
+                  className='form-control'
                   type='text'
                   onChange={formik.handleChange}
-                  value={formik.values.productName || keepProduct.productName}
+                  value={formik.values.productUrl}
                 />
-                <ErrorValidation message={formik.errors.productName} />
               </div>
-            </div>
-            <div className='w-100 d-flex flex-column mb-3'>
-              <label htmlFor='storeName'>Store</label>
-              <Select
-                ref={storesRef}
-                className='basic-single'
-                classNamePrefix='select'
-                defaultValue={storesOptions[0]}
-                name='storeName'
-                options={storesOptions}
-                onChange={(selectedStore) =>
-                  formik.setFieldValue('storeName', selectedStore?.value)
-                }
-              />
-            </div>
-            <div className='w-100 d-flex flex-column mb-3'>
-              <label htmlFor='productUrl'>Product URL</label>
-              <input
-                id='productUrl'
-                name='productUrl'
-                type='text'
-                onChange={formik.handleChange}
-                value={formik.values.productUrl}
-              />
-            </div>
-            <div className='w-100 d-flex flex-column mb-3'>
-              <label htmlFor='price'>Price</label>
-              <input
-                id='price'
-                name='price'
-                type='number'
-                onChange={formik.handleChange}
-                value={formik.values.price}
-              />
-              <ErrorValidation message={formik.errors.price} />
-            </div>
-            <div className='w-100 d-flex flex-column mb-3'>
-              <label htmlFor='quantity'>Weight or units</label>
-              <input
-                id='quantity'
-                name='quantity'
-                type='number'
-                onChange={formik.handleChange}
-                value={formik.values.quantity}
-              />
-              <ErrorValidation message={formik.errors.quantity} />
-            </div>
-            <div>
-              <label htmlFor='unitMeasure'>Unit of measure</label>
-              <Select
-                ref={unitMeasureRef}
-                className='basic-single'
-                classNamePrefix='select'
-                defaultValue={unitMeasureOptions[0]}
-                name='unitMeasure'
-                options={unitMeasureOptions}
-                onChange={(selectedUnitMeasure) =>
-                  formik.setFieldValue(
-                    'unitMeasure',
-                    selectedUnitMeasure?.value
-                  )
-                }
-              />
-            </div>
-
-            <Button variant='outline-primary' type='submit'>
-              Add product
-            </Button>
-          </form>
-        </Col>
-
-        <Col md={{ span: 4 }} className='h-100'>
-          <div className='d-flex justify-content-between mb-4'>
-            <h2 className='m-0'>Products</h2>
-            <Button
-              variant='outline-secondary'
-              disabled={productsList.length < 1}
-              onClick={() => handleShowProductsList()}
-            >
-              Clear
-            </Button>
-          </div>
-          <div className='overflow-scroll h-calc'>
-            {productsList
-              .sort((firstElement, secondElement) =>
-                firstElement.priceUnitMeasure > secondElement.priceUnitMeasure
-                  ? 1
-                  : -1
-              )
-              .map((product, index) => (
-                <ProductDetails
-                  product={product}
-                  key={index}
-                  showButton={true}
-                  onSelectProduct={handleAddToShopping}
+              <div className='d-flex'>
+                <div className='w-50 d-flex flex-column mb-3 me-'>
+                  <label htmlFor='price'>Price</label>
+                  <input
+                    id='price'
+                    name='price'
+                    className='form-control'
+                    type='number'
+                    onChange={formik.handleChange}
+                    value={formik.values.price}
+                  />
+                  <ErrorValidation message={formik.errors.price} />
+                </div>
+                <div className='w-50 d-flex flex-column mb-3 ms-2'>
+                  <label htmlFor='quantity'>Weight or units</label>
+                  <input
+                    id='quantity'
+                    name='quantity'
+                    className='form-control'
+                    type='number'
+                    onChange={formik.handleChange}
+                    value={formik.values.quantity}
+                  />
+                  <ErrorValidation message={formik.errors.quantity} />
+                </div>
+              </div>
+              <div>
+                <label htmlFor='unitMeasure'>Unit of measure</label>
+                <Select
+                  ref={unitMeasureRef}
+                  className='basic-single'
+                  classNamePrefix='select'
+                  defaultValue={unitMeasureOptions[0]}
+                  name='unitMeasure'
+                  options={unitMeasureOptions}
+                  onChange={(selectedUnitMeasure) =>
+                    formik.setFieldValue(
+                      'unitMeasure',
+                      selectedUnitMeasure?.value
+                    )
+                  }
                 />
-              ))}
-          </div>
-        </Col>
+              </div>
+              <div className='d-grid gap-2 mt-3'>
+                <Button variant='primary' size='sm' type='submit'>
+                  Add product
+                </Button>
+              </div>
+            </form>
+          </Col>
 
-        <Col md={{ span: 4 }} className='h-100'>
-          <div className='d-flex justify-content-between mb-4'>
-            <h2 className='m-0'>
-              Shopping Cart{' '}
-              {productsToBuy.length >= 1 && (
-                <span>({productsToBuy.length})</span>
-              )}{' '}
-            </h2>
-            <Button
-              variant='outline-secondary'
-              disabled={productsToBuy.length < 1}
-              onClick={() => handleShowProductsToBuyModal()}
-            >
-              Clear
-            </Button>
-          </div>
-          <div className='overflow-scroll h-calc-cart'>
-            {productsToBuy.map((product, index) => (
-              <ProductDetails
-                product={product}
-                key={index}
-                showRemoveButton={true}
-                onSelectProduct={handleAddToShopping}
-                onRemoveProduct={handleRemoveProduct}
-              />
-            ))}
-          </div>
-          <div>
-            <p className='fs-3 fw-light m-0 pt-3 text-end'>
-              Total:
-              <span className='fw-semibold ps-1'>
-                {formatter.format(getTotalAmount())}
-              </span>
-            </p>
-          </div>
-        </Col>
-      </Row>
-      <ConfirmationModal
-        show={showProductsList}
-        onAction={handleClearProductList}
-        handleClose={handleCloseProductsList}
-        title={'Clear products'}
-        description={'Are you sure you want to empty the products?'}
-      />
-      <ConfirmationModal
-        show={showProductsToBuyModal}
-        onAction={handleClearShoppingCart}
-        handleClose={handleCloseProductsToBuyModal}
-        title={'Clear shoppingCart'}
-        description={'Are you sure you want to empty shopping cart?'}
-      />
-    </Container>
+          <Col md={{ span: 4 }} className='h-100 border-start'>
+            {productsList.length > 0 && (
+              <div className='h-100'>
+                <div
+                  className={`d-flex justify-content-between mb-4 ${
+                    productsList.length > 0 ? 'visible' : 'invisible'
+                  } `}
+                >
+                  <h2 className='m-0 text-dark'>Products</h2>
+                  <Button
+                    variant='outline-secondary'
+                    size='sm'
+                    disabled={productsList.length < 1}
+                    onClick={() => handleShowProductsList()}
+                  >
+                    Clear
+                  </Button>
+                </div>
+                <div
+                  className={`overflow-scroll h-calc ${
+                    productsList.length > 0 ? 'visible' : 'invisible'
+                  } `}
+                >
+                  {productsList
+                    .sort((firstElement, secondElement) =>
+                      firstElement.priceUnitMeasure >
+                      secondElement.priceUnitMeasure
+                        ? 1
+                        : -1
+                    )
+                    .map((product, index) => (
+                      <ProductDetails
+                        product={product}
+                        key={index}
+                        showButton={true}
+                        onSelectProduct={handleAddToShopping}
+                      />
+                    ))}
+                </div>
+              </div>
+            )}
+          </Col>
+
+          <Col md={{ span: 4 }} className='h-100 border-start'>
+            {productsToBuy.length > 0 && (
+              <div className='h-100'>
+                <div className='d-flex justify-content-between mb-4'>
+                  <h2 className='m-0 text-dark'>Shopping Cart</h2>
+                  <Button
+                    variant='outline-secondary'
+                    size='sm'
+                    disabled={productsToBuy.length < 1}
+                    onClick={() => handleShowProductsToBuyModal()}
+                  >
+                    Clear
+                  </Button>
+                </div>
+                <div className='overflow-scroll h-calc-cart'>
+                  {productsToBuy.map((product, index) => (
+                    <ProductDetails
+                      product={product}
+                      key={index}
+                      showRemoveButton={true}
+                      onSelectProduct={handleAddToShopping}
+                      onRemoveProduct={handleRemoveProduct}
+                    />
+                  ))}
+                </div>
+                <div>
+                  <p className='text-end m-0 fw-light'>
+                    Quantity:
+                    {productsToBuy.length >= 1 && (
+                      <span className='fw-semibold'>
+                        {' '}
+                        {productsToBuy.length}
+                      </span>
+                    )}
+                  </p>
+                  <p className='fs-3 fw-light m-0 text-end'>
+                    Total:
+                    <span className='fw-semibold ps-1'>
+                      {formatter.format(getTotalAmount())}
+                    </span>
+                  </p>
+                </div>
+              </div>
+            )}
+          </Col>
+        </Row>
+        <ConfirmationModal
+          show={showProductsList}
+          onAction={handleClearProductList}
+          handleClose={handleCloseProductsList}
+          title={'Clear products'}
+          description={'Are you sure you want to empty the products?'}
+        />
+        <ConfirmationModal
+          show={showProductsToBuyModal}
+          onAction={handleClearShoppingCart}
+          handleClose={handleCloseProductsToBuyModal}
+          title={'Clear shoppingCart'}
+          description={'Are you sure you want to empty shopping cart?'}
+        />
+      </Container>
+    </section>
   );
 }
 

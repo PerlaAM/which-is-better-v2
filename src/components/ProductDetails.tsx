@@ -75,13 +75,21 @@ export default function ProductDetails(props: any) {
       </div>
       <div className='d-flex mt-3 justify-content-end'>
         {props.showButton && (
-          <Button onClick={() => handleAdd(props.product)}>
+          <Button
+            variant='primary'
+            size='sm'
+            onClick={() => handleAdd(props.product)}
+          >
             <FontAwesomeIcon icon={faBagShopping} className='me-2' />
             Add to cart
           </Button>
         )}
         {props.showRemoveButton && (
-          <Button className='' onClick={() => handleRemove(props.product)}>
+          <Button
+            variant='primary'
+            size='sm'
+            onClick={() => handleRemove(props.product)}
+          >
             <FontAwesomeIcon icon={faTrashCan} className='me-2' />
             Remove
           </Button>

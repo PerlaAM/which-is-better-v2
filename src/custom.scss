@@ -6,16 +6,24 @@ $font-family-sans-serif: 'Poppins', sans-serif;
 $font-family-base: $font-family-sans-serif !default;
 $font-weight-semibold: 400;
 $font-weight-bold: 600;
-$primary: #4c5cea;
-$secondary: #4ceada;
+$primary: #6ec4bc;
+$secondary: #437873;
+$dark: #274542;
 $light-gray: #edede9;
 $steal: #6c757d;
+$btn-color: white;
+$input-group-addon-bg: red;
 
 $theme-colors: (
   'primary': $primary,
   'secondary': $secondary,
   'light-gray': $light-gray,
+  'dark': $dark,
   'steal': $steal,
 );
+
+.btn-primary {
+  color: white !important;
+}
 
 @import '~bootstrap/scss/bootstrap';
