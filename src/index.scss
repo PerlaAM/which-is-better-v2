@@ -8,9 +8,43 @@ body {
 }
 
 .h-calc-cart {
-  height: calc(100% - 118.2px);
+  height: calc(100% - 124.48px);
+}
+
+.h-calc-header {
+  height: calc(100vh - 56px);
 }
 
 .fs-8 {
   font-size: 0.8rem;
+}
+
+.navbar-brand {
+  color: white;
+}
+
+.navbar-brand:hover {
+  color: white;
+}
+
+.form-control {
+  border: none;
+  background-color: #6ec4bc3c;
+}
+
+.form-control:focus {
+  background-color: #6ec4bc3c;
+}
+
+.select__control {
+  border: none !important;
+  background-color: #6ec4bc3c !important;
+}
+
+.select__input-container {
+  color: #444444 !important;
+}
+
+label {
+  color: #274542;
 }
