@@ -33,16 +33,13 @@ body {
 }
 
 .form-control:focus {
+  box-shadow: 0 0 0 0.1rem rgba(110, 196, 188, 0.5);
+  border: none;
   background-color: #6ec4bc3c;
 }
 
-.select__control {
-  border: none !important;
-  background-color: #6ec4bc3c !important;
-}
-
-.select__input-container {
-  color: #444444 !important;
+input[type='text'] {
+  background-color: #6ec4bc3c;
 }
 
 label {
