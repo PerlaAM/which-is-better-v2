@@ -176,6 +176,7 @@ function App() {
       unitMeasure: unitMeasureOptions[0].value,
     });
     unitMeasureRef.current.setValue(unitMeasureOptions[0]);
+    setUnitMeasures(unitMeasureOptions);
     storesRef.current.setValue(storesOptions[0]);
     handleCloseProductsList();
   };
@@ -328,103 +329,86 @@ function App() {
             </form>
           </Col>
 
-          <Col
-            md={{ span: 4 }}
-            className={`h-100  ${
-              productsList.length > 0 ? 'border-start' : ''
-            } `}
-          >
-            {productsList.length > 0 && (
-              <div className='h-100 ptm-3'>
-                <div className='d-flex justify-content-between mb-4'>
-                  <h2 className='m-0 text-dark'>Products</h2>
-                  <Button
-                    variant='outline-secondary'
-                    size='sm'
-                    disabled={productsList.length < 1}
-                    onClick={() => handleShowProductsList()}
-                  >
-                    Clear
-                  </Button>
-                </div>
-                <div
-                  className={`overflow-scroll h-calc ${
-                    productsList.length > 0 ? 'visible' : 'invisible'
-                  } `}
+          <Col md={{ span: 4 }} className='h-100 border-start'>
+            <div className='h-100 ptm-3'>
+              <div className='d-flex justify-content-between mb-4'>
+                <h2 className='m-0 text-dark'>Products</h2>
+                <Button
+                  variant='outline-secondary'
+                  size='sm'
+                  disabled={productsList.length < 1}
+                  onClick={() => handleShowProductsList()}
                 >
-                  {productsList
-                    .sort((firstElement, secondElement) =>
-                      firstElement.priceUnitMeasure >
-                      secondElement.priceUnitMeasure
-                        ? 1
-                        : -1
-                    )
-                    .map((product, index) => (
-                      <ProductDetails
-                        product={product}
-                        key={index}
-                        showButton={true}
-                        onSelectProduct={handleAddToShopping}
-                      />
-                    ))}
-                </div>
+                  Clear
+                </Button>
               </div>
-            )}
+              <div
+                className={`overflow-scroll h-calc ${
+                  productsList.length > 0 ? 'visible' : 'invisible'
+                } `}
+              >
+                {productsList
+                  .sort((firstElement, secondElement) =>
+                    firstElement.priceUnitMeasure >
+                    secondElement.priceUnitMeasure
+                      ? 1
+                      : -1
+                  )
+                  .map((product, index) => (
+                    <ProductDetails
+                      product={product}
+                      key={index}
+                      showButton={true}
+                      onSelectProduct={handleAddToShopping}
+                    />
+                  ))}
+              </div>
+            </div>
           </Col>
 
-          <Col
-            md={{ span: 4 }}
-            className={`h-100  ${
-              productsToBuy.length > 0 ? 'border-start' : ''
-            } `}
-          >
-            {productsToBuy.length > 0 && (
-              <div className='h-100 ptm-3'>
-                <div className='d-flex justify-content-between mb-4'>
-                  <h2 className='m-0 text-dark'>Shopping Cart</h2>
-                  <Button
-                    variant='outline-secondary'
-                    size='sm'
-                    disabled={productsToBuy.length < 1}
-                    onClick={() => handleShowProductsToBuyModal()}
-                  >
-                    Clear
-                  </Button>
-                </div>
-                <div className='overflow-scroll h-calc-cart'>
-                  {productsToBuy
-                    .sort((firstElement, secondElement) =>
-                      firstElement.storeName > secondElement.storeName ? 1 : -1
-                    )
-                    .map((product, index) => (
-                      <ProductDetails
-                        product={product}
-                        key={index}
-                        showRemoveButton={true}
-                        onSelectProduct={handleAddToShopping}
-                        onRemoveProduct={handleRemoveProduct}
-                      />
-                    ))}
-                </div>
-                <div className='pt-3'>
-                  <p className='text-end m-0 fw-light'>
-                    Quantity:
-                    {productsToBuy.length >= 1 && (
-                      <span className='fw-semibold'>
-                        {' '}
-                        {productsToBuy.length}
-                      </span>
-                    )}
-                  </p>
-                  <p className='fs-3 fw-light m-0 text-end'>
-                    Total:
-                    <span className='fw-semibold ps-1'>
-                      {formatter.format(getTotalAmount())}
-                    </span>
-                  </p>
-                </div>
+          <Col md={{ span: 4 }} className='h-100 border-start'>
+            <div className='h-100 ptm-3'>
+              <div className='d-flex justify-content-between mb-4'>
+                <h2 className='m-0 text-dark'>Shopping Cart</h2>
+                <Button
+                  variant='outline-secondary'
+                  size='sm'
+                  disabled={productsToBuy.length < 1}
+                  onClick={() => handleShowProductsToBuyModal()}
+                >
+                  Clear
+                </Button>
               </div>
-            )}
+              <div className='overflow-scroll h-calc-cart'>
+                {productsToBuy
+                  .sort((firstElement, secondElement) =>
+                    firstElement.storeName > secondElement.storeName ? 1 : -1
+                  )
+                  .map((product, index) => (
+                    <ProductDetails
+                      product={product}
+                      key={index}
+                      showRemoveButton={true}
+                      onSelectProduct={handleAddToShopping}
+                      onRemoveProduct={handleRemoveProduct}
+                    />
+                  ))}
+              </div>
+              <div className='pt-3'>
+                <p className='text-end m-0 fw-light'>
+                  Quantity:
+                  {productsToBuy.length >= 1 && (
+                    <span className='fw-semibold'> {productsToBuy.length}</span>
+                  )}
+                </p>
+                <p className='fs-3 fw-light m-0 text-end'>
+                  Total:
+                  <span className='fw-semibold ps-1'>
+                    {formatter.format(getTotalAmount())}
+                  </span>
+                </p>
+              </div>
+            </div>
           </Col>
         </Row>
         <ConfirmationModal
