@@ -17,6 +17,7 @@
     "formik": "^2.2.9",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.2",
+    "react-currency-input-field": "^3.6.10",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
     "react-select": "^5.7.2",

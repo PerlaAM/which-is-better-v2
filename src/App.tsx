@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useFormik } from 'formik';
+import CurrencyInput from 'react-currency-input-field';
 import { storesOptions } from './data/stores';
 import { unitMeasureOptions } from './data/unitMeasures';
 import { IProduct } from './interfaces/productInterfaces';
@@ -264,14 +265,16 @@ function App() {
               <div className='d-flex'>
                 <div className='w-50 d-flex flex-column mb-3 me-'>
                   <label htmlFor='price'>Price</label>
-                  <input
+                  <CurrencyInput
                     id='price'
                     name='price'
+                    placeholder='$0.0'
                     className='form-control'
-                    autoComplete='off'
-                    type='number'
-                    onChange={formik.handleChange}
+                    prefix={'$'}
                     value={formik.values.price}
+                    onValueChange={(value) => {
+                      formik.setFieldValue('price', value);
+                    }}
                   />
                   <ErrorValidation message={formik.errors.price} />
                 </div>
