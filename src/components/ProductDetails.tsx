@@ -4,7 +4,8 @@ import {
   faBagShopping,
   faTrashCan,
 } from '@fortawesome/free-solid-svg-icons';
-import { formatter } from '../components/utils/formatValue';
+
+import { formatter, formatterWeight } from '../components/utils/formatValue';
 import { Stores } from '../enum/storesEnum';
 import Button from 'react-bootstrap/Button';
 
@@ -61,7 +62,8 @@ export default function ProductDetails(props: any) {
         </div>
         <div className='text-center h-100 lh-sm'>
           <p className='m-0 fw-semibold'>
-            {props.product?.quantityConverted} {getUnitMeasure()}
+            {formatterWeight.format(props.product?.quantityConverted)}{' '}
+            {getUnitMeasure()}
           </p>
           <p className='m-0 fs-8'>WEIGHT</p>
         </div>
@@ -85,7 +87,7 @@ export default function ProductDetails(props: any) {
         )}
         {props.showRemoveButton && (
           <Button
-            variant='secondary'
+            variant='primary'
             size='sm'
             onClick={() => handleRemove(props.product)}
           >

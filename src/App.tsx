@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useFormik } from 'formik';
+import CurrencyInput from 'react-currency-input-field';
 import { storesOptions } from './data/stores';
 import { unitMeasureOptions } from './data/unitMeasures';
 import { IProduct } from './interfaces/productInterfaces';
@@ -176,6 +177,7 @@ function App() {
       unitMeasure: unitMeasureOptions[0].value,
     });
     unitMeasureRef.current.setValue(unitMeasureOptions[0]);
+    setUnitMeasures(unitMeasureOptions);
     storesRef.current.setValue(storesOptions[0]);
     handleCloseProductsList();
   };
@@ -213,10 +215,14 @@ function App() {
                     className='form-control'
                     autoComplete='off'
                     type='text'
+                    onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
                     value={formik.values.productName || keepProduct.productName}
                   />
-                  <ErrorValidation message={formik.errors.productName} />
+                  <ErrorValidation
+                    message={formik.errors.productName}
+                    touched={formik.touched.productName}
+                  />
                 </div>
               </div>
               <div className='w-100 d-flex flex-column mb-3'>
@@ -263,16 +269,23 @@ function App() {
               <div className='d-flex'>
                 <div className='w-50 d-flex flex-column mb-3 me-'>
                   <label htmlFor='price'>Price</label>
-                  <input
+                  <CurrencyInput
                     id='price'
                     name='price'
+                    placeholder='$0.0'
                     className='form-control'
-                    autoComplete='off'
-                    type='number'
-                    onChange={formik.handleChange}
+                    prefix={'$'}
                     value={formik.values.price}
+                    onBlur={formik.handleBlur}
+                    onValueChange={(value) => {
+                      formik.setFieldValue('price', value);
+                    }}
                   />
-                  <ErrorValidation message={formik.errors.price} />
+
+                  <ErrorValidation
+                    message={formik.errors.price}
+                    touched={formik.touched.price}
+                  />
                 </div>
                 <div className='w-50 d-flex flex-column mb-3 ms-2'>
                   <label htmlFor='quantity'>Weight or pieces</label>
@@ -283,9 +296,13 @@ function App() {
                     autoComplete='off'
                     type='number'
                     onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     value={formik.values.quantity}
                   />
-                  <ErrorValidation message={formik.errors.quantity} />
+                  <ErrorValidation
+                    message={formik.errors.quantity}
+                    touched={formik.touched.quantity}
+                  />
                 </div>
               </div>
               <div>
@@ -328,103 +345,86 @@ function App() {
             </form>
           </Col>
 
-          <Col
-            md={{ span: 4 }}
-            className={`h-100  ${
-              productsList.length > 0 ? 'border-start' : ''
-            } `}
-          >
-            {productsList.length > 0 && (
-              <div className='h-100 ptm-3'>
-                <div className='d-flex justify-content-between mb-4'>
-                  <h2 className='m-0 text-dark'>Products</h2>
-                  <Button
-                    variant='outline-secondary'
-                    size='sm'
-                    disabled={productsList.length < 1}
-                    onClick={() => handleShowProductsList()}
-                  >
-                    Clear
-                  </Button>
-                </div>
-                <div
-                  className={`overflow-scroll h-calc ${
-                    productsList.length > 0 ? 'visible' : 'invisible'
-                  } `}
+          <Col md={{ span: 4 }} className='h-100 border-start'>
+            <div className='h-100 ptm-3'>
+              <div className='d-flex justify-content-between mb-4'>
+                <h2 className='m-0 text-dark'>Products</h2>
+                <Button
+                  variant='outline-secondary'
+                  size='sm'
+                  disabled={productsList.length < 1}
+                  onClick={() => handleShowProductsList()}
                 >
-                  {productsList
-                    .sort((firstElement, secondElement) =>
-                      firstElement.priceUnitMeasure >
-                      secondElement.priceUnitMeasure
-                        ? 1
-                        : -1
-                    )
-                    .map((product, index) => (
-                      <ProductDetails
-                        product={product}
-                        key={index}
-                        showButton={true}
-                        onSelectProduct={handleAddToShopping}
-                      />
-                    ))}
-                </div>
+                  Clear
+                </Button>
               </div>
-            )}
+              <div
+                className={`overflow-scroll h-calc ${
+                  productsList.length > 0 ? 'visible' : 'invisible'
+                } `}
+              >
+                {productsList
+                  .sort((firstElement, secondElement) =>
+                    firstElement.priceUnitMeasure >
+                    secondElement.priceUnitMeasure
+                      ? 1
+                      : -1
+                  )
+                  .map((product, index) => (
+                    <ProductDetails
+                      product={product}
+                      key={index}
+                      showButton={true}
+                      onSelectProduct={handleAddToShopping}
+                    />
+                  ))}
+              </div>
+            </div>
           </Col>
 
-          <Col
-            md={{ span: 4 }}
-            className={`h-100  ${
-              productsToBuy.length > 0 ? 'border-start' : ''
-            } `}
-          >
-            {productsToBuy.length > 0 && (
-              <div className='h-100 ptm-3'>
-                <div className='d-flex justify-content-between mb-4'>
-                  <h2 className='m-0 text-dark'>Shopping Cart</h2>
-                  <Button
-                    variant='outline-secondary'
-                    size='sm'
-                    disabled={productsToBuy.length < 1}
-                    onClick={() => handleShowProductsToBuyModal()}
-                  >
-                    Clear
-                  </Button>
-                </div>
-                <div className='overflow-scroll h-calc-cart'>
-                  {productsToBuy
-                    .sort((firstElement, secondElement) =>
-                      firstElement.storeName > secondElement.storeName ? 1 : -1
-                    )
-                    .map((product, index) => (
-                      <ProductDetails
-                        product={product}
-                        key={index}
-                        showRemoveButton={true}
-                        onSelectProduct={handleAddToShopping}
-                        onRemoveProduct={handleRemoveProduct}
-                      />
-                    ))}
-                </div>
-                <div className='pt-3'>
-                  <p className='text-end m-0 fw-light'>
-                    Quantity:
-                    {productsToBuy.length >= 1 && (
-                      <span className='fw-semibold'>
-                        {' '}
-                        {productsToBuy.length}
-                      </span>
-                    )}
-                  </p>
-                  <p className='fs-3 fw-light m-0 text-end'>
-                    Total:
-                    <span className='fw-semibold ps-1'>
-                      {formatter.format(getTotalAmount())}
-                    </span>
-                  </p>
-                </div>
+          <Col md={{ span: 4 }} className='h-100 border-start'>
+            <div className='h-100 ptm-3'>
+              <div className='d-flex justify-content-between mb-4'>
+                <h2 className='m-0 text-dark'>Shopping Cart</h2>
+                <Button
+                  variant='outline-secondary'
+                  size='sm'
+                  disabled={productsToBuy.length < 1}
+                  onClick={() => handleShowProductsToBuyModal()}
+                >
+                  Clear
+                </Button>
               </div>
-            )}
+              <div className='overflow-scroll h-calc-cart'>
+                {productsToBuy
+                  .sort((firstElement, secondElement) =>
+                    firstElement.storeName > secondElement.storeName ? 1 : -1
+                  )
+                  .map((product, index) => (
+                    <ProductDetails
+                      product={product}
+                      key={index}
+                      showRemoveButton={true}
+                      onSelectProduct={handleAddToShopping}
+                      onRemoveProduct={handleRemoveProduct}
+                    />
+                  ))}
+              </div>
+              <div className='pt-3'>
+                <p className='text-end m-0 fw-light'>
+                  Quantity:
+                  {productsToBuy.length >= 1 && (
+                    <span className='fw-semibold'> {productsToBuy.length}</span>
+                  )}
+                </p>
+                <p className='fs-3 fw-light m-0 text-end'>
+                  Total:
+                  <span className='fw-semibold ps-1'>
+                    {formatter.format(getTotalAmount())}
+                  </span>
+                </p>
+              </div>
+            </div>
           </Col>
         </Row>
         <ConfirmationModal
