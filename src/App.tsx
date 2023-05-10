@@ -215,10 +215,14 @@ function App() {
                     className='form-control'
                     autoComplete='off'
                     type='text'
+                    onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
                     value={formik.values.productName || keepProduct.productName}
                   />
-                  <ErrorValidation message={formik.errors.productName} />
+                  <ErrorValidation
+                    message={formik.errors.productName}
+                    touched={formik.touched.productName}
+                  />
                 </div>
               </div>
               <div className='w-100 d-flex flex-column mb-3'>
@@ -272,11 +276,16 @@ function App() {
                     className='form-control'
                     prefix={'$'}
                     value={formik.values.price}
+                    onBlur={formik.handleBlur}
                     onValueChange={(value) => {
                       formik.setFieldValue('price', value);
                     }}
                   />
-                  <ErrorValidation message={formik.errors.price} />
+
+                  <ErrorValidation
+                    message={formik.errors.price}
+                    touched={formik.touched.price}
+                  />
                 </div>
                 <div className='w-50 d-flex flex-column mb-3 ms-2'>
                   <label htmlFor='quantity'>Weight or pieces</label>
@@ -287,9 +296,13 @@ function App() {
                     autoComplete='off'
                     type='number'
                     onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     value={formik.values.quantity}
                   />
-                  <ErrorValidation message={formik.errors.quantity} />
+                  <ErrorValidation
+                    message={formik.errors.quantity}
+                    touched={formik.touched.quantity}
+                  />
                 </div>
               </div>
               <div>
