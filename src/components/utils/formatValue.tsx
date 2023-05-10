@@ -3,3 +3,5 @@ export const formatter = new Intl.NumberFormat('es-MX', {
   currency: 'MXN',
   maximumFractionDigits: 5,
 });
+
+export const formatterWeight = new Intl.NumberFormat();
