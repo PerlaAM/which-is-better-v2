@@ -413,9 +413,7 @@ function App() {
               <div className='pt-3'>
                 <p className='text-end m-0 fw-light'>
                   Quantity:
-                  {productsToBuy.length >= 1 && (
-                    <span className='fw-semibold'> {productsToBuy.length}</span>
-                  )}
+                  <span className='fw-semibold'> {productsToBuy.length}</span>
                 </p>
                 <p className='fs-3 fw-light m-0 text-end'>
                   Total:
