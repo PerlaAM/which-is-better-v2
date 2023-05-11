@@ -199,7 +199,7 @@ function App() {
   return (
     <section>
       <Header />
-      <Container className='h-calc-header py-3'>
+      <Container className='h-calc-header py-3 bg-light-blue'>
         <Row className='h-100'>
           <Col md={{ span: 4 }}>
             <div className='mb-4'>
