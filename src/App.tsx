@@ -199,167 +199,180 @@ function App() {
   return (
     <section>
       <Header />
-      <Container className='h-calc-header py-3 bg-light-blue'>
+      <Container className='h-calc-header py-4 bg-light-blue'>
         <Row className='h-100'>
-          <Col md={{ span: 4 }}>
-            <div className='mb-4'>
-              <h2 className='m-0 text-dark'>New product</h2>
-            </div>
-            <form onSubmit={formik.handleSubmit}>
-              <div className='w-100 d-flex flex-column mb-3'>
-                <label htmlFor='productName'>Product name</label>
-                <div className='w-100 d-flex flex-column'>
+          <Col md={{ span: 4 }} className='gx-4'>
+            <div className='bg-white rounded border h-100'>
+              <div className='p-3 border-bottom'>
+                <h5 className='m-0 text-dark lh-1'>New product</h5>
+              </div>
+              <form className='p-3' onSubmit={formik.handleSubmit}>
+                <div className='w-100 d-flex flex-column mb-3 '>
+                  <label htmlFor='productName'>Product name</label>
+                  <div className='w-100 d-flex flex-column'>
+                    <input
+                      id='productName'
+                      name='productName'
+                      className='form-control'
+                      autoComplete='off'
+                      type='text'
+                      onBlur={formik.handleBlur}
+                      onChange={formik.handleChange}
+                      value={
+                        formik.values.productName || keepProduct.productName
+                      }
+                    />
+                    <ErrorValidation
+                      message={formik.errors.productName}
+                      touched={formik.touched.productName}
+                    />
+                  </div>
+                </div>
+                <div className='w-100 d-flex flex-column mb-3'>
+                  <label htmlFor='storeName'>Store</label>
+                  <Select
+                    ref={storesRef}
+                    className='basic-single'
+                    classNamePrefix='select'
+                    theme={(theme) => ({
+                      ...theme,
+                      colors: {
+                        ...theme.colors,
+                        primary50: '#44444433',
+                        primary25: '#44444433',
+                        primary: '#444444',
+                      },
+                    })}
+                    styles={{
+                      control: (base) => ({
+                        ...base,
+                        border: '1px solid #E2DCDE',
+                        background: '#ffffff',
+                      }),
+                    }}
+                    defaultValue={storesOptions[0]}
+                    name='storeName'
+                    options={storesOptions}
+                    onChange={(selectedStore) =>
+                      formik.setFieldValue('storeName', selectedStore?.value)
+                    }
+                  />
+                </div>
+                <div className='w-100 d-flex flex-column mb-3'>
+                  <label htmlFor='productUrl'>Product URL</label>
                   <input
-                    id='productName'
-                    name='productName'
+                    id='productUrl'
+                    name='productUrl'
                     className='form-control'
                     autoComplete='off'
                     type='text'
-                    onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
-                    value={formik.values.productName || keepProduct.productName}
-                  />
-                  <ErrorValidation
-                    message={formik.errors.productName}
-                    touched={formik.touched.productName}
+                    value={formik.values.productUrl}
                   />
                 </div>
-              </div>
-              <div className='w-100 d-flex flex-column mb-3'>
-                <label htmlFor='storeName'>Store</label>
-                <Select
-                  ref={storesRef}
-                  className='basic-single'
-                  classNamePrefix='select'
-                  theme={(theme) => ({
-                    ...theme,
-                    colors: {
-                      ...theme.colors,
-                      primary25: '#6ec4bc66',
-                      primary: '#6ec4bc',
-                    },
-                  })}
-                  styles={{
-                    control: (base) => ({
-                      ...base,
-                      border: 'none',
-                      background: '#6ec4bc3c',
-                    }),
-                  }}
-                  defaultValue={storesOptions[0]}
-                  name='storeName'
-                  options={storesOptions}
-                  onChange={(selectedStore) =>
-                    formik.setFieldValue('storeName', selectedStore?.value)
-                  }
-                />
-              </div>
-              <div className='w-100 d-flex flex-column mb-3'>
-                <label htmlFor='productUrl'>Product URL</label>
-                <input
-                  id='productUrl'
-                  name='productUrl'
-                  className='form-control'
-                  autoComplete='off'
-                  type='text'
-                  onChange={formik.handleChange}
-                  value={formik.values.productUrl}
-                />
-              </div>
-              <div className='d-flex'>
-                <div className='w-50 d-flex flex-column mb-3 me-'>
-                  <label htmlFor='price'>Price</label>
-                  <CurrencyInput
-                    id='price'
-                    name='price'
-                    placeholder='$0.0'
-                    className='form-control'
-                    prefix={'$'}
-                    value={formik.values.price}
-                    onBlur={formik.handleBlur}
-                    onValueChange={(value) => {
-                      formik.setFieldValue('price', value);
-                    }}
-                  />
+                <div className='d-flex'>
+                  <div className='w-50 d-flex flex-column mb-3 me-'>
+                    <label htmlFor='price'>Price</label>
+                    <CurrencyInput
+                      id='price'
+                      name='price'
+                      placeholder='$0.0'
+                      className='form-control'
+                      prefix={'$'}
+                      value={formik.values.price}
+                      onBlur={formik.handleBlur}
+                      onValueChange={(value) => {
+                        formik.setFieldValue('price', value);
+                      }}
+                    />
 
-                  <ErrorValidation
-                    message={formik.errors.price}
-                    touched={formik.touched.price}
+                    <ErrorValidation
+                      message={formik.errors.price}
+                      touched={formik.touched.price}
+                    />
+                  </div>
+                  <div className='w-50 d-flex flex-column mb-3 ms-2'>
+                    <label htmlFor='quantity'>Weight or pieces</label>
+                    <input
+                      id='quantity'
+                      name='quantity'
+                      className='form-control'
+                      autoComplete='off'
+                      type='number'
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.quantity}
+                    />
+                    <ErrorValidation
+                      message={formik.errors.quantity}
+                      touched={formik.touched.quantity}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor='unitMeasure'>Unit of measure</label>
+                  <Select
+                    ref={unitMeasureRef}
+                    className='basic-single'
+                    classNamePrefix='select'
+                    theme={(theme) => ({
+                      ...theme,
+                      colors: {
+                        ...theme.colors,
+                        primary50: '#44444433',
+                        primary25: '#44444433',
+                        primary: '#444444',
+                      },
+                    })}
+                    styles={{
+                      control: (base) => ({
+                        ...base,
+                        border: '1px solid #E2DCDE',
+                        background: '#ffffff',
+                      }),
+                    }}
+                    defaultValue={unitMeasureOptions[0]}
+                    name='unitMeasure'
+                    options={unitMeasures}
+                    onChange={(selectedUnitMeasure) =>
+                      formik.setFieldValue(
+                        'unitMeasure',
+                        selectedUnitMeasure?.value
+                      )
+                    }
                   />
                 </div>
-                <div className='w-50 d-flex flex-column mb-3 ms-2'>
-                  <label htmlFor='quantity'>Weight or pieces</label>
-                  <input
-                    id='quantity'
-                    name='quantity'
-                    className='form-control'
-                    autoComplete='off'
-                    type='number'
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.quantity}
-                  />
-                  <ErrorValidation
-                    message={formik.errors.quantity}
-                    touched={formik.touched.quantity}
-                  />
+                <div className='d-grid gap-2 mt-3'>
+                  <Button variant='primary' size='sm' type='submit'>
+                    Add product
+                  </Button>
                 </div>
-              </div>
-              <div>
-                <label htmlFor='unitMeasure'>Unit of measure</label>
-                <Select
-                  ref={unitMeasureRef}
-                  className='basic-single'
-                  classNamePrefix='select'
-                  theme={(theme) => ({
-                    ...theme,
-                    colors: {
-                      ...theme.colors,
-                      primary25: '#6ec4bc66',
-                      primary: '#6ec4bc',
-                    },
-                  })}
-                  styles={{
-                    control: (base) => ({
-                      ...base,
-                      border: 'none',
-                      background: '#6ec4bc3c',
-                    }),
-                  }}
-                  defaultValue={unitMeasureOptions[0]}
-                  name='unitMeasure'
-                  options={unitMeasures}
-                  onChange={(selectedUnitMeasure) =>
-                    formik.setFieldValue(
-                      'unitMeasure',
-                      selectedUnitMeasure?.value
-                    )
-                  }
-                />
-              </div>
-              <div className='d-grid gap-2 mt-3'>
-                <Button variant='primary' size='sm' type='submit'>
-                  Add product
-                </Button>
-              </div>
-            </form>
+              </form>
+            </div>
           </Col>
 
-          <Col md={{ span: 4 }} className='h-100 border-start'>
-            <div className='h-100 ptm-3'>
-              <div className='d-flex justify-content-between mb-4'>
-                <h2 className='m-0 text-dark'>Products</h2>
-                <Button
+          <Col md={{ span: 8 }} className='gx-4'>
+            <div className='bg-white rounded border h-100'>
+              <div className='d-flex justify-content-between align-middle p-3 border-bottom'>
+                <h5 className='m-0 text-dark lh-1'>Products</h5>
+                {/* <Button
                   variant='outline-secondary'
                   size='sm'
                   disabled={productsList.length < 1}
+                 
+                >
+                  Clear
+                </Button> */}
+                <a
+                  href='#'
+                  className='text-secondary fs-8 pe-auto text-decoration-none'
                   onClick={() => handleShowProductsList()}
                 >
                   Clear
-                </Button>
+                </a>
               </div>
               <div
-                className={`overflow-scroll h-calc ${
+                className={`overflow-scroll h-calc p-3 ${
                   productsList.length > 0 ? 'visible' : 'invisible'
                 } `}
               >
@@ -378,49 +391,6 @@ function App() {
                       onSelectProduct={handleAddToShopping}
                     />
                   ))}
-              </div>
-            </div>
-          </Col>
-
-          <Col md={{ span: 4 }} className='h-100 border-start'>
-            <div className='h-100 ptm-3'>
-              <div className='d-flex justify-content-between mb-4'>
-                <h2 className='m-0 text-dark'>Shopping Cart</h2>
-                <Button
-                  variant='outline-secondary'
-                  size='sm'
-                  disabled={productsToBuy.length < 1}
-                  onClick={() => handleShowProductsToBuyModal()}
-                >
-                  Clear
-                </Button>
-              </div>
-              <div className='overflow-scroll h-calc-cart'>
-                {productsToBuy
-                  .sort((firstElement, secondElement) =>
-                    firstElement.storeName > secondElement.storeName ? 1 : -1
-                  )
-                  .map((product, index) => (
-                    <ProductDetails
-                      product={product}
-                      key={index}
-                      showRemoveButton={true}
-                      onSelectProduct={handleAddToShopping}
-                      onRemoveProduct={handleRemoveProduct}
-                    />
-                  ))}
-              </div>
-              <div className='pt-3'>
-                <p className='text-end m-0 fw-light'>
-                  Quantity:
-                  <span className='fw-semibold'> {productsToBuy.length}</span>
-                </p>
-                <p className='fs-3 fw-light m-0 text-end'>
-                  Total:
-                  <span className='fw-semibold ps-1'>
-                    {formatter.format(getTotalAmount())}
-                  </span>
-                </p>
               </div>
             </div>
           </Col>

@@ -13,10 +13,14 @@ export default function ConfirmationModal(props: any) {
       </Modal.Header>
       <Modal.Body>{props.description}</Modal.Body>
       <Modal.Footer>
-        <Button variant='secondary' onClick={() => props.handleClose()}>
+        <Button
+          variant='outline-secondary'
+          size='sm'
+          onClick={() => props.handleClose()}
+        >
           Close
         </Button>
-        <Button variant='primary' onClick={() => handleAction()}>
+        <Button variant='primary' size='sm' onClick={() => handleAction()}>
           Clear
         </Button>
       </Modal.Footer>

@@ -34,8 +34,8 @@ export default function ProductDetails(props: any) {
   };
 
   return (
-    <div className='p-3 bg-light-gray rounded mb-3 shadow-sm'>
-      <div className='text-center mb-3'>
+    <div className='p-2 border rounded mb-3 d-flex justify-content-between align-items-center'>
+      <div className='text-center lh-sm'>
         <p className='m-0 fw-light'>{props.product?.productName}</p>
         <p className='m-0 text-steal'>
           {Stores[props.product?.storeName]}
@@ -53,49 +53,45 @@ export default function ProductDetails(props: any) {
           )}
         </p>
       </div>
-      <div className='d-flex justify-content-between'>
-        <div className='text-center h-100 lh-sm'>
-          <p className='m-0 fw-semibold'>
-            {formatter.format(props.product?.price)}
-          </p>
-          <p className='m-0 fs-8'>PRICE</p>
-        </div>
-        <div className='text-center h-100 lh-sm'>
-          <p className='m-0 fw-semibold'>
-            {formatterWeight.format(props.product?.quantityConverted)}{' '}
-            {getUnitMeasure()}
-          </p>
-          <p className='m-0 fs-8'>WEIGHT</p>
-        </div>
-        <div className='text-center h-100 lh-sm'>
-          <p className='m-0 fw-bold'>
-            {formatter.format(props.product?.priceUnitMeasure)}
-          </p>
-          <p className='m-0 fs-8'>UNIT PRICE</p>
-        </div>
+      <div className='text-center lh-sm'>
+        <p className='m-0 fw-semibold'>
+          {formatter.format(props.product?.price)}
+        </p>
+        <p className='m-0 fs-8'>PRICE</p>
       </div>
-      <div className='d-flex mt-3 justify-content-end'>
-        {props.showButton && (
-          <Button
-            variant='primary'
-            size='sm'
-            onClick={() => handleAdd(props.product)}
-          >
-            <FontAwesomeIcon icon={faBagShopping} className='me-2' />
-            Add to cart
-          </Button>
-        )}
-        {props.showRemoveButton && (
-          <Button
-            variant='primary'
-            size='sm'
-            onClick={() => handleRemove(props.product)}
-          >
-            <FontAwesomeIcon icon={faTrashCan} className='me-2' />
-            Remove
-          </Button>
-        )}
+      <div className='text-center lh-sm'>
+        <p className='m-0 fw-semibold'>
+          {formatterWeight.format(props.product?.quantityConverted)}{' '}
+          {getUnitMeasure()}
+        </p>
+        <p className='m-0 fs-8'>WEIGHT</p>
       </div>
+      <div className='text-center lh-sm'>
+        <p className='m-0 fw-bold'>
+          {formatter.format(props.product?.priceUnitMeasure)}
+        </p>
+        <p className='m-0 fs-8'>UNIT PRICE</p>
+      </div>
+      {props.showButton && (
+        <Button
+          variant='primary'
+          size='sm'
+          onClick={() => handleAdd(props.product)}
+        >
+          <FontAwesomeIcon icon={faBagShopping} className='me-2' />
+          Add
+        </Button>
+      )}
+      {props.showRemoveButton && (
+        <Button
+          variant='primary'
+          size='sm'
+          onClick={() => handleRemove(props.product)}
+        >
+          <FontAwesomeIcon icon={faTrashCan} className='me-2' />
+          Remove
+        </Button>
+      )}
     </div>
   );
 }
