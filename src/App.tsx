@@ -4,8 +4,7 @@ import CurrencyInput from 'react-currency-input-field';
 import { storesOptions } from './data/stores';
 import { unitMeasureOptions } from './data/unitMeasures';
 import { IProduct } from './interfaces/productInterfaces';
-import { formatter } from './components/utils/formatValue';
-import ProductDetails from './components/ProductDetails';
+import ProductCard from './components/ProductCard';
 import ErrorValidation from './components/ErrorValidation';
 import ConfirmationModal from './components/ConfirmationModal';
 import Header from './components/Header';
@@ -15,6 +14,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
+import ShoppingCartModal from './components/ShoppingCartModal';
 
 type Errors = {
   productName?: string;
@@ -45,6 +45,7 @@ function App() {
   });
   const [showProductsList, setShowProductsList] = useState(false);
   const [showProductsToBuyModal, setShowProductsToBuyModal] = useState(false);
+  const [showShoppingCartModal, setShowShoppingCartModal] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem('productsToBuyList'))
@@ -131,15 +132,6 @@ function App() {
     setKeepProduct(product);
   };
 
-  const getTotalAmount = (): number => {
-    let totalAmount = 0.0;
-
-    productsToBuy.map((product) => {
-      totalAmount += product?.price;
-    });
-    return totalAmount;
-  };
-
   const handleAddToShopping = (product: any) => {
     if (
       !productsToBuy.find(
@@ -189,16 +181,18 @@ function App() {
   };
 
   const handleShowProductsList = () => setShowProductsList(true);
-
   const handleCloseProductsList = () => setShowProductsList(false);
-
   const handleShowProductsToBuyModal = () => setShowProductsToBuyModal(true);
-
   const handleCloseProductsToBuyModal = () => setShowProductsToBuyModal(false);
+  const handleShowShoppingCartModal = () => setShowShoppingCartModal(true);
+  const handleCloseShoppingCartModal = () => setShowShoppingCartModal(false);
 
   return (
     <section>
-      <Header />
+      <Header
+        quantity={productsToBuy?.length}
+        handleShowShoppingCart={handleShowShoppingCartModal}
+      />
       <Container className='h-calc-header py-4 bg-light-blue'>
         <Row className='h-100'>
           <Col md={{ span: 4 }} className='gx-4'>
@@ -355,14 +349,6 @@ function App() {
             <div className='bg-white rounded border h-100'>
               <div className='d-flex justify-content-between align-middle p-3 border-bottom'>
                 <h5 className='m-0 text-dark lh-1'>Products</h5>
-                {/* <Button
-                  variant='outline-secondary'
-                  size='sm'
-                  disabled={productsList.length < 1}
-                 
-                >
-                  Clear
-                </Button> */}
                 <a
                   href='#'
                   className='text-secondary fs-8 pe-auto text-decoration-none'
@@ -384,10 +370,9 @@ function App() {
                       : -1
                   )
                   .map((product, index) => (
-                    <ProductDetails
+                    <ProductCard
                       product={product}
                       key={index}
-                      showButton={true}
                       onSelectProduct={handleAddToShopping}
                     />
                   ))}
@@ -397,17 +382,24 @@ function App() {
         </Row>
         <ConfirmationModal
           show={showProductsList}
-          onAction={handleClearProductList}
+          handleAction={handleClearProductList}
           handleClose={handleCloseProductsList}
           title={'Clear products'}
           description={'Are you sure you want to empty the products?'}
         />
         <ConfirmationModal
           show={showProductsToBuyModal}
-          onAction={handleClearShoppingCart}
+          handleAction={handleClearShoppingCart}
           handleClose={handleCloseProductsToBuyModal}
           title={'Clear shoppingCart'}
           description={'Are you sure you want to empty shopping cart?'}
+        />
+        <ShoppingCartModal
+          show={showShoppingCartModal}
+          productsList={productsToBuy}
+          handleClose={handleCloseShoppingCartModal}
+          handleShowConfirmatioModal={handleShowProductsToBuyModal}
+          handleRemoveProductModal={handleRemoveProduct}
         />
       </Container>
       <Footer />

@@ -1,15 +1,13 @@
+import { formatter, formatterWeight } from './utils/formatValue';
+import { Stores } from '../enum/storesEnum';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+  faBasketShopping,
   faArrowUpRightFromSquare,
-  faBagShopping,
-  faTrashCan,
 } from '@fortawesome/free-solid-svg-icons';
-
-import { formatter, formatterWeight } from '../components/utils/formatValue';
-import { Stores } from '../enum/storesEnum';
 import Button from 'react-bootstrap/Button';
 
-export default function ProductDetails(props: any) {
+export default function ProductCard(props: any) {
   const getUnitMeasure = (): string => {
     const unitMeasure = props.product?.unitMeasure;
     let unitMeasureText = props.product?.unitMeasure;
@@ -27,10 +25,6 @@ export default function ProductDetails(props: any) {
 
   const handleAdd = (product: any) => {
     props.onSelectProduct(product);
-  };
-
-  const handleRemove = (product: any) => {
-    props.onRemoveProduct(product);
   };
 
   return (
@@ -72,26 +66,15 @@ export default function ProductDetails(props: any) {
         </p>
         <p className='m-0 fs-8'>UNIT PRICE</p>
       </div>
-      {props.showButton && (
-        <Button
-          variant='primary'
-          size='sm'
-          onClick={() => handleAdd(props.product)}
-        >
-          <FontAwesomeIcon icon={faBagShopping} className='me-2' />
-          Add
-        </Button>
-      )}
-      {props.showRemoveButton && (
-        <Button
-          variant='primary'
-          size='sm'
-          onClick={() => handleRemove(props.product)}
-        >
-          <FontAwesomeIcon icon={faTrashCan} className='me-2' />
-          Remove
-        </Button>
-      )}
+
+      <Button
+        variant='primary'
+        size='sm'
+        onClick={() => handleAdd(props.product)}
+      >
+        <FontAwesomeIcon icon={faBasketShopping} className='me-2 ' />
+        Add
+      </Button>
     </div>
   );
 }

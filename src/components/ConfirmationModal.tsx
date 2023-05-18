@@ -2,10 +2,6 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
 export default function ConfirmationModal(props: any) {
-  const handleAction = () => {
-    props.onAction();
-  };
-
   return (
     <Modal show={props.show} onHide={props.handleClose}>
       <Modal.Header closeButton>
@@ -20,7 +16,11 @@ export default function ConfirmationModal(props: any) {
         >
           Close
         </Button>
-        <Button variant='primary' size='sm' onClick={() => handleAction()}>
+        <Button
+          variant='primary'
+          size='sm'
+          onClick={() => props.handleAction()}
+        >
           Clear
         </Button>
       </Modal.Footer>
