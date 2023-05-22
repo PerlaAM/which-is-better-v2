@@ -9,7 +9,7 @@ export default function ShoppingCartModal(props: any) {
     let totalAmount = 0.0;
 
     productsToBuy.map((product: any) => {
-      totalAmount += product?.price;
+      totalAmount += Number(product?.price);
     });
 
     return totalAmount;
@@ -21,19 +21,23 @@ export default function ShoppingCartModal(props: any) {
   };
 
   return (
-    <Modal show={props.show} onHide={props.handleClose}>
+    <Modal
+      show={props.show}
+      onHide={props.handleClose}
+      className='cart'
+      backdropClassName='card-backdrop'
+    >
       <Modal.Header closeButton>
         <Modal.Title>Shopping cart</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <a
           href='#'
-          className='text-secondary fs-8 pe-auto text-decoration-none'
+          className='text-secondary fs-8 text-decoration-none mb-2 d-flex justify-content-end'
           onClick={() => handleAction()}
         >
           Clear
         </a>
-        <br></br>
         {productsToBuy
           .sort((firstElement: any, secondElement: any) =>
             firstElement.storeName > secondElement.storeName ? 1 : -1
@@ -46,9 +50,9 @@ export default function ShoppingCartModal(props: any) {
             />
           ))}
       </Modal.Body>
-      <Modal.Footer>
-        Total{' '}
-        <span className='fw-semibold ps-1'>
+      <Modal.Footer className='d-flex justify-content-between text-steal px-3'>
+        TOTAL{' '}
+        <span className='fw-semibold ps-1 text-dark'>
           {formatter.format(getTotalAmount())}
         </span>
       </Modal.Footer>

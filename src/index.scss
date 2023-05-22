@@ -53,6 +53,26 @@ label {
   font-size: 1.2rem;
 }
 
+.card-cart:last-child {
+  margin-bottom: 0 !important;
+}
+
+.card-backdrop {
+  height: calc(100vh - 56px);
+  top: 56px;
+}
+
+.cart .modal-dialog {
+  margin: 71px auto;
+  right: 0;
+  margin-right: 1rem;
+}
+
+.cart .modal-body {
+  height: 20rem;
+  overflow-y: scroll;
+}
+
 @media only screen and (max-width: 600px) {
   .h-calc-header {
     height: 100%;

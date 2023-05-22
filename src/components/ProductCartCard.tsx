@@ -12,8 +12,8 @@ export default function ProductCartCard(props: any) {
   };
 
   return (
-    <div className='p-2 border rounded mb-3 d-flex justify-content-between align-items-center'>
-      <div className='text-center lh-sm'>
+    <div className='card-cart p-2 border rounded mb-3 d-flex justify-content-between align-items-center'>
+      <div className='lh-sm'>
         <p className='m-0 fw-light'>{props.product?.productName}</p>
         <p className='m-0 text-steal'>
           {Stores[props.product?.storeName]}
@@ -32,7 +32,7 @@ export default function ProductCartCard(props: any) {
         </p>
       </div>
 
-      <div className='text-center lh-sm'>
+      <div className='text-end lh-sm'>
         <a
           href='#'
           className='text-primary fs-8 pe-auto text-decoration-none'
@@ -41,7 +41,7 @@ export default function ProductCartCard(props: any) {
           <FontAwesomeIcon icon={faTrashCan} className='me-2' />
         </a>
 
-        <p className='m-0 fw-bold'>{formatter.format(props.product?.price)}</p>
+        <p className='m-0 fw-light'>{formatter.format(props.product?.price)}</p>
       </div>
     </div>
   );
