@@ -31,7 +31,7 @@ export default function ProductCard(props: any) {
     <div className='p-2 border rounded mb-3 d-flex justify-content-between align-items-center'>
       <div className='text-center lh-sm'>
         <p className='m-0 fw-light'>
-          {props.product?.productName} {props.product?.typeProduct}
+          {props.product?.productName} {props.product?.variant}
         </p>
         <p className='m-0 text-steal'>
           {Stores[props.product?.storeName]}
