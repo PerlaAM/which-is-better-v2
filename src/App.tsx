@@ -233,6 +233,7 @@ function App() {
                         name='productName'
                         className='form-control'
                         autoComplete='off'
+                        autoFocus={true}
                         type='text'
                         onBlur={formik.handleBlur}
                         onChange={formik.handleChange}
