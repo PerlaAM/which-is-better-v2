@@ -33,14 +33,18 @@ export default function ShoppingCartModal(props: any) {
       <Modal.Body>
         <a
           href='#'
-          className='text-secondary fs-8 text-decoration-none mb-2 d-flex justify-content-end'
+          className='text-secondary fs-8 text-decoration-none mb-2 d-flex justify-content-end link-danger'
           onClick={() => handleAction()}
         >
           Clear
         </a>
         {productsToBuy
           .sort((firstElement: any, secondElement: any) =>
-            firstElement.storeName > secondElement.storeName ? 1 : -1
+            firstElement.storeName > secondElement.storeName
+              ? 1
+              : -1 && firstElement.price > secondElement.price
+              ? 1
+              : -1
           )
           .map((product: any, index: number) => (
             <ProductCartCard
