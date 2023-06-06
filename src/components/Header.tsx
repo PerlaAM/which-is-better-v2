@@ -13,7 +13,7 @@ export default function Header(props: any) {
         <Navbar.Text>
           <a
             href='#'
-            className='text-primary fs-8 pe-auto text-decoration-none'
+            className='text-primary fs-8 pe-auto text-decoration-none link-steal'
             onClick={() => props.handleShowShoppingCart()}
           >
             <FontAwesomeIcon icon={faBasketShopping} className='ms-1 ' />

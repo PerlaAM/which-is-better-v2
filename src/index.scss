@@ -74,9 +74,10 @@ label {
 }
 
 @media only screen and (max-width: 600px) {
-  .h-calc-header {
-    height: 100%;
-  }
+  // .h-calc-header {
+  //   height: 100%;
+  // }
+  // TODO: Check in responsive
 
   .ptm-3 {
     padding-top: 4rem;

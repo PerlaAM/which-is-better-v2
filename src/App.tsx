@@ -33,8 +33,10 @@ const validate = (values: any) => {
 };
 
 function App() {
+  const productNameRef: any = useRef(null);
   const storesRef: any = useRef(null);
   const unitMeasureRef: any = useRef(null);
+  const priceRef: any = useRef(null);
   const [productsList, setProductsList] = useState<IProduct[]>([]);
   const [productsToBuy, setProductsToBuy] = useState<IProduct[]>([]);
   const [unitMeasures, setUnitMeasures] = useState(unitMeasureOptions);
@@ -71,6 +73,7 @@ function App() {
     onSubmit: (values, { resetForm }) => {
       saveFirstProduct(values);
       addProductsList(values);
+      priceRef.current.focus();
       resetForm();
     },
   });
@@ -151,6 +154,15 @@ function App() {
     }
   };
 
+  const handleRemoveProductList = (product: any) => {
+    setProductsList((productsList) =>
+      productsList.filter((productList) => productList.id !== product.id)
+    );
+
+    productsList.splice(productsList.indexOf(product), 1);
+    priceRef.current.focus();
+  };
+
   const handleRemoveProduct = (product: any) => {
     setProductsToBuy((productsCart) =>
       productsCart.filter((productCart) => productCart.id !== product.id)
@@ -182,11 +194,19 @@ function App() {
     handleCloseProductsToBuyModal();
   };
 
-  const handleShowProductsList = () => setShowProductsList(true);
+  const handleShowProductsList = () => {
+    productNameRef.current.focus();
+    setShowProductsList(true);
+  };
+
   const handleCloseProductsList = () => setShowProductsList(false);
+
   const handleShowProductsToBuyModal = () => setShowProductsToBuyModal(true);
+
   const handleCloseProductsToBuyModal = () => setShowProductsToBuyModal(false);
+
   const handleShowShoppingCartModal = () => setShowShoppingCartModal(true);
+
   const handleCloseShoppingCartModal = () => setShowShoppingCartModal(false);
 
   return (
@@ -195,9 +215,9 @@ function App() {
         quantity={productsToBuy?.length}
         handleShowShoppingCart={handleShowShoppingCartModal}
       />
-      <Container className='h-calc-header py-4 bg-light-blue'>
+      <Container className='h-calc-header py-4 bg-light-blue overflow-auto'>
         <Row className='h-100'>
-          <Col md={{ span: 4 }} className='gx-4'>
+          <Col lg={{ span: 4 }} className='gx-4 mb-lg-0 mb-4'>
             <div className='bg-white rounded border h-100'>
               <div className='p-3 border-bottom'>
                 <h5 className='m-0 text-dark lh-1'>New product</h5>
@@ -208,6 +228,7 @@ function App() {
                     <label htmlFor='productName'>Product name</label>
                     <div className='w-100 d-flex flex-column'>
                       <input
+                        ref={productNameRef}
                         id='productName'
                         name='productName'
                         className='form-control'
@@ -287,6 +308,7 @@ function App() {
                   <div className='col-4 d-flex flex-column mb-3'>
                     <label htmlFor='price'>Price</label>
                     <CurrencyInput
+                      ref={priceRef}
                       id='price'
                       name='price'
                       placeholder='$0.0'
@@ -369,13 +391,13 @@ function App() {
             </div>
           </Col>
 
-          <Col md={{ span: 8 }} className='gx-4'>
+          <Col lg={{ span: 8 }} className='gx-4 pb-lg-0 pb-4'>
             <div className='bg-white rounded border h-100'>
               <div className='d-flex justify-content-between align-middle p-3 border-bottom'>
                 <h5 className='m-0 text-dark lh-1'>Products</h5>
                 <a
                   href='#'
-                  className='text-secondary fs-8 pe-auto text-decoration-none'
+                  className='text-secondary fs-8 pe-auto text-decoration-none link-danger'
                   onClick={() => handleShowProductsList()}
                 >
                   Clear
@@ -398,6 +420,7 @@ function App() {
                       product={product}
                       key={index}
                       onSelectProduct={handleAddToShopping}
+                      onRemoveProduct={handleRemoveProductList}
                     />
                   ))}
               </div>

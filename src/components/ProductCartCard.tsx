@@ -37,10 +37,10 @@ export default function ProductCartCard(props: any) {
       <div className='text-end lh-sm'>
         <a
           href='#'
-          className='text-primary fs-8 pe-auto text-decoration-none'
+          className='text-primary fs-8 pe-auto text-decoration-none link-steal'
           onClick={() => handleRemove(props.product)}
         >
-          <FontAwesomeIcon icon={faTrashCan} className='me-2' />
+          <FontAwesomeIcon icon={faTrashCan} />
         </a>
 
         <p className='m-0 fw-light'>{formatter.format(props.product?.price)}</p>
