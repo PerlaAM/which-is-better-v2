@@ -9,6 +9,7 @@ import { IProduct } from './interfaces/productInterfaces';
 import ProductCard from './components/ProductCard';
 import ErrorValidation from './components/ErrorValidation';
 import ConfirmationModal from './components/ConfirmationModal';
+import ToastAlert from './components/ToastAlert';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Select from 'react-select';
@@ -50,6 +51,7 @@ function App() {
   const [showProductsList, setShowProductsList] = useState(false);
   const [showProductsToBuyModal, setShowProductsToBuyModal] = useState(false);
   const [showShoppingCartModal, setShowShoppingCartModal] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem('productsToBuyList'))
@@ -150,6 +152,7 @@ function App() {
           productToBuy.productName === product.productName
       )
     ) {
+      toggleShowToast();
       setProductsToBuy([product, ...productsToBuy]);
       localStorage.setItem(
         'productsToBuyList',
@@ -212,6 +215,10 @@ function App() {
   const handleShowShoppingCartModal = () => setShowShoppingCartModal(true);
 
   const handleCloseShoppingCartModal = () => setShowShoppingCartModal(false);
+
+  const toggleShowToast = () => setShowToast(!showToast);
+
+  const closeModal = () => setShowToast(false);
 
   return (
     <section>
@@ -445,6 +452,7 @@ function App() {
               </div>
             </div>
           </Col>
+          <ToastAlert show={showToast} handleClose={toggleShowToast} />
         </Row>
         <ConfirmationModal
           show={showProductsList}
