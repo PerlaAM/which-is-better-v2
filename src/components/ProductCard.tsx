@@ -7,7 +7,8 @@ import {
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import Button from 'react-bootstrap/Button';
-
+import { UnitMeasureEnum } from '../enum/unitMeasuresEnum';
+import { unitMeasureOptions } from '../data/unitMeasures';
 export default function ProductCard(props: any) {
   const getUnitMeasure = (): string => {
     const unitMeasure = props.product?.unitMeasure;

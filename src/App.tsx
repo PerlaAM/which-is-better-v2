@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useFormik } from 'formik';
 import CurrencyInput from 'react-currency-input-field';
 import { storesOptions } from './data/stores';
+import { UnitMeasureEnum } from './enum/unitMeasuresEnum';
 import { unitMeasureOptions } from './data/unitMeasures';
 import { IProduct } from './interfaces/productInterfaces';
 import ProductCard from './components/ProductCard';
