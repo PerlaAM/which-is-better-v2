@@ -4,7 +4,7 @@ import {
   faTrashCan,
 } from '@fortawesome/free-solid-svg-icons';
 import { formatter } from './utils/formatValue';
-import { Stores } from '../enum/storesEnum';
+import { StoresEnum } from '../enum/storesEnum';
 
 export default function ProductCartCard(props: any) {
   const handleRemove = (product: any) => {
@@ -18,7 +18,9 @@ export default function ProductCartCard(props: any) {
           {props.product?.productName} {props.product?.variant}
         </p>
         <p className='m-0 text-steal'>
-          {Stores[props.product?.storeName]}
+          {StoresEnum[props.product?.storeName] != undefined
+            ? StoresEnum[props.product?.storeName]
+            : props.product?.storeName}
           {props.product?.productUrl && (
             <a
               href={props.product?.productUrl}

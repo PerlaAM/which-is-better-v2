@@ -3,6 +3,7 @@ import { useFormik } from 'formik';
 import CurrencyInput from 'react-currency-input-field';
 import { storesOptions } from './data/stores';
 import { UnitMeasureEnum } from './enum/unitMeasuresEnum';
+import { StoresEnum } from './enum/storesEnum';
 import { unitMeasureOptions } from './data/unitMeasures';
 import { IProduct } from './interfaces/productInterfaces';
 import ProductCard from './components/ProductCard';
@@ -65,6 +66,7 @@ function App() {
       productName: keepProduct.productName,
       variant: '',
       storeName: keepProduct.storeName,
+      otherStoreName: '',
       productUrl: '',
       price: 0.0,
       quantity: 0,
@@ -84,7 +86,8 @@ function App() {
       id: values?.productName + values?.quantity + Math.random(),
       productName: values?.productName,
       variant: values?.variant,
-      storeName: values?.storeName,
+      storeName:
+        values.otherStoreName != '' ? values.otherStoreName : values?.storeName,
       productUrl: values?.productUrl,
       price: values?.price,
       quantity: values?.quantity,
@@ -294,6 +297,20 @@ function App() {
                     }
                   />
                 </div>
+                {formik.values.storeName === 'others' && (
+                  <div className='w-100 d-flex flex-column mb-3'>
+                    <label htmlFor='otherStoreName'>Store name</label>
+                    <input
+                      id='otherStoreName'
+                      name='otherStoreName'
+                      className='form-control'
+                      autoComplete='off'
+                      type='text'
+                      onChange={formik.handleChange}
+                      value={formik.values.otherStoreName}
+                    />
+                  </div>
+                )}
                 <div className='w-100 d-flex flex-column mb-3'>
                   <label htmlFor='productUrl'>Product URL</label>
                   <input
