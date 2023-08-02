@@ -1,8 +1,8 @@
-export enum Stores {
+export enum StoresEnum {
   sams = "Sam's Club" as any,
   walmart = 'Walmart' as any,
   amazon = 'Amazon' as any,
-  mercadoLibre = 'Mercado Libre' as any,
+  mercado_libre = 'Mercado Libre' as any,
   chedraui = 'Chedraui' as any,
   costco = 'Costco' as any,
   bodega_aurrera = 'Bodega Aurrera' as any,
@@ -10,5 +10,9 @@ export enum Stores {
   city_market = 'City Market' as any,
   fresko = 'Fresko' as any,
   comer = 'La Comer' as any,
+  petco = 'Petco' as any,
+  farmacias_ahorro = 'Farmacias del Ahorro' as any,
+  farmacias_guadalajara = 'Farmacia Guadalajara' as any,
+  farmacias_similares = 'Farmacias Similares' as any,
   others = 'Otros' as any,
 }

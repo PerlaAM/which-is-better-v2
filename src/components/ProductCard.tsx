@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { formatter, formatterWeight } from './utils/formatValue';
-import { Stores } from '../enum/storesEnum';
+import { StoresEnum } from '../enum/storesEnum';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBasketShopping,
@@ -7,8 +8,11 @@ import {
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import Button from 'react-bootstrap/Button';
-
+import { UnitMeasureEnum } from '../enum/unitMeasuresEnum';
+import { unitMeasureOptions } from '../data/unitMeasures';
 export default function ProductCard(props: any) {
+  const [isAdded, setIsAdded] = useState(false);
+
   const getUnitMeasure = (): string => {
     const unitMeasure = props.product?.unitMeasure;
     let unitMeasureText = props.product?.unitMeasure;
@@ -25,6 +29,7 @@ export default function ProductCard(props: any) {
   };
 
   const handleAdd = (product: any) => {
+    setIsAdded(true);
     props.onSelectProduct(product);
   };
 
@@ -40,7 +45,9 @@ export default function ProductCard(props: any) {
             {props.product?.productName} {props.product?.variant}
           </p>
           <p className='m-0 text-steal'>
-            {Stores[props.product?.storeName]}
+            {StoresEnum[props.product?.storeName] != undefined
+              ? StoresEnum[props.product?.storeName]
+              : props.product?.storeName}
             {props.product?.productUrl && (
               <a
                 href={props.product?.productUrl}
@@ -86,7 +93,8 @@ export default function ProductCard(props: any) {
         </div>
 
         <Button
-          variant='primary'
+          className={`${isAdded ? 'disabled' : ''}`}
+          variant={`${isAdded ? 'outline-primary' : 'primary'}`}
           size='sm'
           onClick={() => handleAdd(props.product)}
         >

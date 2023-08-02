@@ -2,11 +2,14 @@ import { useState, useRef, useEffect } from 'react';
 import { useFormik } from 'formik';
 import CurrencyInput from 'react-currency-input-field';
 import { storesOptions } from './data/stores';
+import { UnitMeasureEnum } from './enum/unitMeasuresEnum';
+import { StoresEnum } from './enum/storesEnum';
 import { unitMeasureOptions } from './data/unitMeasures';
 import { IProduct } from './interfaces/productInterfaces';
 import ProductCard from './components/ProductCard';
 import ErrorValidation from './components/ErrorValidation';
 import ConfirmationModal from './components/ConfirmationModal';
+import ToastAlert from './components/ToastAlert';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Select from 'react-select';
@@ -48,6 +51,7 @@ function App() {
   const [showProductsList, setShowProductsList] = useState(false);
   const [showProductsToBuyModal, setShowProductsToBuyModal] = useState(false);
   const [showShoppingCartModal, setShowShoppingCartModal] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem('productsToBuyList'))
@@ -64,6 +68,7 @@ function App() {
       productName: keepProduct.productName,
       variant: '',
       storeName: keepProduct.storeName,
+      otherStoreName: '',
       productUrl: '',
       price: 0.0,
       quantity: 0,
@@ -83,7 +88,8 @@ function App() {
       id: values?.productName + values?.quantity + Math.random(),
       productName: values?.productName,
       variant: values?.variant,
-      storeName: values?.storeName,
+      storeName:
+        values.otherStoreName != '' ? values.otherStoreName : values?.storeName,
       productUrl: values?.productUrl,
       price: values?.price,
       quantity: values?.quantity,
@@ -146,6 +152,7 @@ function App() {
           productToBuy.productName === product.productName
       )
     ) {
+      toggleShowToast();
       setProductsToBuy([product, ...productsToBuy]);
       localStorage.setItem(
         'productsToBuyList',
@@ -208,6 +215,10 @@ function App() {
   const handleShowShoppingCartModal = () => setShowShoppingCartModal(true);
 
   const handleCloseShoppingCartModal = () => setShowShoppingCartModal(false);
+
+  const toggleShowToast = () => setShowToast(!showToast);
+
+  const closeModal = () => setShowToast(false);
 
   return (
     <section>
@@ -293,6 +304,20 @@ function App() {
                     }
                   />
                 </div>
+                {formik.values.storeName === 'others' && (
+                  <div className='w-100 d-flex flex-column mb-3'>
+                    <label htmlFor='otherStoreName'>Store name</label>
+                    <input
+                      id='otherStoreName'
+                      name='otherStoreName'
+                      className='form-control'
+                      autoComplete='off'
+                      type='text'
+                      onChange={formik.handleChange}
+                      value={formik.values.otherStoreName}
+                    />
+                  </div>
+                )}
                 <div className='w-100 d-flex flex-column mb-3'>
                   <label htmlFor='productUrl'>Product URL</label>
                   <input
@@ -369,6 +394,10 @@ function App() {
                           border: '1px solid #E2DCDE',
                           background: '#ffffff',
                         }),
+                        menuList: (base) => ({
+                          ...base,
+                          height: '130px', // your desired height
+                        }),
                       }}
                       defaultValue={unitMeasureOptions[0]}
                       name='unitMeasure'
@@ -427,6 +456,7 @@ function App() {
               </div>
             </div>
           </Col>
+          <ToastAlert show={showToast} handleClose={toggleShowToast} />
         </Row>
         <ConfirmationModal
           show={showProductsList}
