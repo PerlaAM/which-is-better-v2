@@ -394,6 +394,10 @@ function App() {
                           border: '1px solid #E2DCDE',
                           background: '#ffffff',
                         }),
+                        menuList: (base) => ({
+                          ...base,
+                          height: '130px', // your desired height
+                        }),
                       }}
                       defaultValue={unitMeasureOptions[0]}
                       name='unitMeasure'

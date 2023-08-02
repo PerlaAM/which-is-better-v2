@@ -3,18 +3,11 @@ import { UnitMeasureEnum } from '../enum/unitMeasuresEnum';
 
 export const unitMeasureOptions: readonly IUnitMeasure[] = [
   {
-    identifier: 'Mg',
-    value: UnitMeasureEnum.Mg,
-    label: 'mg',
-    type: 'weight',
-    equivalence: '1000',
-  },
-  {
     identifier: 'G',
     value: UnitMeasureEnum.G,
     label: 'g',
     type: 'weight',
-    equivalence: '0.001',
+    equivalence: '1',
   },
   {
     identifier: 'Kg',
@@ -28,7 +21,7 @@ export const unitMeasureOptions: readonly IUnitMeasure[] = [
     value: UnitMeasureEnum.Ml,
     label: 'ml',
     type: 'liquid',
-    equivalence: '0,001',
+    equivalence: '0.001',
   },
   {
     identifier: 'L',
@@ -42,6 +35,6 @@ export const unitMeasureOptions: readonly IUnitMeasure[] = [
     value: UnitMeasureEnum.Pieces,
     label: 'Pieces',
     type: 'unity',
-    equivalence: '',
+    equivalence: '1',
   },
 ];

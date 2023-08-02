@@ -11,7 +11,6 @@ export default function ToastAlert(props: any) {
         autohide
       >
         <Toast.Header>
-          <img src='holder.js/20x20?text=%20' className='rounded me-2' alt='' />
           <strong className='me-auto'>Success!</strong>
         </Toast.Header>
         <Toast.Body>Product added to shopping cart</Toast.Body>
